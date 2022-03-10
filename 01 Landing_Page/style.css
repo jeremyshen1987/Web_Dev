@@ -1,0 +1,47 @@
+body {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+/* Color and font size styling top section */
+p, a {
+    font-size: 18px;
+    color: #E5E7EB;
+}
+
+a {
+    text-decoration: none;
+}
+
+h1 {
+    font-size: 48px;
+    font-weight: bolder;
+    color: #F9FAF8;
+}
+.top {
+    background-color: #1F2937;
+}
+
+
+
+.header {
+    width: 80vw;
+    display: flex;
+    justify-content: center;
+
+}
+
+.logo {
+    color: #F9FAF8;
+    font-size: 24px;
+}
+
+ul, li {
+    display: flex;
+    margin-left: auto;
+    gap: 10px;
+    list-style-type: none;
+}
