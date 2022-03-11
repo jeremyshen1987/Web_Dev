@@ -1,14 +1,16 @@
 body {
     height: 100vh;
+    width: 99vw;
     display: flex;
     flex-direction: column;
+    margin: 0;
+    
 }
-
 
 
 /* Color and font size styling top section */
 p, a {
-    font-size: 18px;
+    font-size: 20px;
     color: #E5E7EB;
 }
 
@@ -20,28 +22,160 @@ h1 {
     font-size: 48px;
     font-weight: bolder;
     color: #F9FAF8;
+    margin: 0;
+
 }
+
+
+
 .top {
     background-color: #1F2937;
+    margin: 60px 0  ;
+    
 }
-
-
 
 .header {
-    width: 80vw;
+    
     display: flex;
     justify-content: center;
+    align-self: center;
+    margin: 40px 150px;
 
 }
+
 
 .logo {
     color: #F9FAF8;
     font-size: 24px;
+    align-self: center;
 }
 
 ul, li {
     display: flex;
     margin-left: auto;
-    gap: 10px;
+    gap: 15px;
     list-style-type: none;
 }
+
+.top_main {
+    display: flex;
+    flex-direction: row;
+    margin: 80px 150px;
+    gap: 100px;
+}
+
+img {
+    margin-left: auto;
+
+}
+
+.top_left {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+button.top_signup {
+    width: 100px;
+    height: 50px;
+    padding: 12px;
+    background-color: #3882f6;
+    color: white;
+    text-align: center;
+    border: none;
+    border-radius: 12px;
+    
+}
+
+
+
+h2 {
+    text-align: center;
+}
+
+.upper_middle {
+    display: flex;
+    justify-content: center;
+    margin: 60px 0;
+    gap: 150px;
+}
+
+.pair_img_text img{
+    max-width: 100px;
+    height: auto;
+}
+
+.pair_img_text {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    font-size: 24px;
+    text-align: center;
+}
+
+.lower_middle {
+    background-color: #E5E7EB;  
+    font-size: 36px;
+    font-weight: lighter;  
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 100px 600px;
+}
+
+.author {
+    align-self: flex-end;
+}
+
+
+.bottom {
+    background-color: #3882f6;
+    display: flex;
+    margin: 100px 350px;
+    padding: 60px;
+    border-radius: 12px;
+}
+
+.container_bottom {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    gap: 10px;
+}
+
+button.bottom_signup {
+    width: 150px;
+    height: auto;
+    padding: 20px;
+    color: white;
+    background-color: #3882f6;
+    border: 2px solid white;
+    border-radius: 12px;
+    margin-left: auto;
+}
+
+.bottom_title {
+    font-size: 24px;
+    color: #F9FAF8;
+}
+
+.text {
+    font-size: 18px;
+    color: #E5E7EB;
+}
+
+
+.footer {
+    height: 100px;
+    background-color: #1F2937;  
+    color: white;
+    line-height: 100px;
+    text-align: center;
+ 
+}
+
+span {
+    display: inline-block;
+    vertical-align: middle;
+    line-height: normal;
+  }
