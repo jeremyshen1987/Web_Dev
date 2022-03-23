@@ -1,0 +1,29 @@
+.container {
+
+    border: 4px solid  #66ccff;
+
+    height: 800px;
+    width: 800px;
+
+    margin: 100px auto;
+    
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+
+}
+
+.box {
+    
+    border: 4px solid  #006666;
+    flex: 0 0 50px;   
+    aspect-ratio: 1/1;
+    box-sizing: border-box;
+
+    transition: all .8s ease;
+}
+
+.sketching {
+    background-color: deepskyblue;
+}
