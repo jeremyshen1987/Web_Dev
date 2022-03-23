@@ -1,13 +1,29 @@
 
-let para = [ "rock", "paper", "scissors"];
+const buttons = document.querySelectorAll('button');
+
+buttons.forEach(button => button.addEventListener('click',single_round))
+
+
+
+let para = [ "rock", "paper", "scissor"];
 
 function computer_play(){
     return para[Math.floor(Math.random()*3)];
 }
 
+let player_score = 0,
+    computer_score = 0;
 
 
-function single_round(player_pick,computer_pick){
+
+function single_round(){
+
+
+    const computer_pick = computer_play();
+    const player_pick = this.classList.value;
+
+    console.log('AI pick ' + computer_pick)
+    console.log('your pick ' + player_pick)
 
 
     if (player_pick == computer_pick) {console.log("it's a tie!");}
@@ -15,7 +31,7 @@ function single_round(player_pick,computer_pick){
     else {
 
         switch(player_pick){
-            case "rock": computer_pick=="scissors" ? (console.log('rock beats scissors. you win'), player_score+=1) :
+            case "rock": computer_pick=="scissor" ? (console.log('rock beats scissor. you win'), player_score+=1) :
                 (console.log('paper beats rock, you lose!'), computer_score+=1)
             break;
             
@@ -28,45 +44,36 @@ function single_round(player_pick,computer_pick){
             break;
         }
     }
+
+    const selection = document.querySelector('.selection');
+    selection.textContent = `You picked: ${player_pick} , Computer picked: ${computer_pick}`;
+
+    const score = document.querySelector('.score');
+    score.textContent = `Player Score: ${player_score}   Computer Score: ${computer_score}`
+
+
+    if(player_score >= 5){
+
+        selection.textContent = ''
+        score.textContent = 'Hooray! You win 5 rounds first!'
+
+
+        player_score = 0
+        computer_score = 0
+
+
+
+    } else if (computer_score >= 5){
+
+        selection.textContent = ''
+        score.textContent = 'Game Over! Computer win 5 rounds first'
+
+        player_score = 0
+        computer_score = 0
+
+
+    }
+
+
     
 }
-
-
-let player_score = 0,
-    computer_score = 0;
-
-
-function main(){
-
-    for(let i = 0; i < 5; i++){
-
-
-        let player_pick = prompt('rock, paper or scissors ?').toLowerCase();
-        const computer_pick = computer_play();
-
-        while(true){
-
-            if (player_pick !== 'rock' && player_pick !== 'paper' && player_pick !== 'scissors'){
-                player_pick = prompt('invalid input! select one of them: rock, paper or scissors')
-            }
-            else{
-                break;
-            }
-        }
-
-        console.log(computer_pick);
-
-        single_round(player_pick,computer_pick);
-
-        console.log('player score: ' + player_score);
-        console.log('computer score: ' + computer_score);
-
-    };
-
-(player_score > computer_score) ? console.log(`Game Over, you win! \n final score: Player:${player_score} Computer:${computer_score}`) :
-(player_score < computer_score) ? console.log(`Game Over, Computer win! \n final score: Player:${player_score} Computer:${computer_score}`) :
-console.log(`Game Over, Draw! \n final score: Player:${player_score} Computer:${computer_score}`);
-
-}
-
-main();

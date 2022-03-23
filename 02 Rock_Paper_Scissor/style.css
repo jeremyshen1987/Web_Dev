@@ -1,0 +1,44 @@
+h1 {
+    text-align: center;
+}
+.container {
+
+    display: flex;
+    justify-content: center;
+    align-items: center ;
+
+}
+
+button {
+
+    border: .4rem solid black;
+    border-radius: .5rem;
+    margin: 1rem;
+    font-size: 1.5rem;
+    padding: 1rem .5rem;
+    width: 10rem;
+    text-align: center;
+    color: white;
+    background: rgba(0,0,0,0.4);
+    text-shadow: 0 0 .5rem black;
+
+}
+
+.score {
+
+    font-size: 32px;
+    text-align: center;
+    color: goldenrod;
+    margin-top: 30px;
+    
+}
+
+.selection {
+
+    font-size: 32px;
+    text-align: center;
+    color: black;
+    margin-top: 30px;
+    
+    
+} 
