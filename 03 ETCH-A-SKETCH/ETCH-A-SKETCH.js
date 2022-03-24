@@ -1,9 +1,25 @@
 
+function prompt_boxNum(){
+
+    let boxNum = parseInt(prompt("Selet a number between 1 - 50 ", 16)); 
+
+    if(!Number.isInteger(boxNum) || boxNum < 0 || boxNum > 50){
+        alert('Invalid input!')
+        prompt_boxNum()
+    }else{
+        Modify_Box_Num(boxNum)   
+    }
+
+}
+
+
+
+
+
 const container = document.querySelector('.container')
 
 const box = document.createElement('div')
 box.classList.add('box')
-// box.innerHTML = 'haha'
 
 
 function createBoxes(Box_Num){
@@ -16,7 +32,11 @@ function createBoxes(Box_Num){
 
 }
 
+
 createBoxes(256)
+
+
+
 
 
 function draw(){
@@ -34,8 +54,10 @@ function erase(){
 
 const boxes = document.querySelectorAll('.box')
 boxes.forEach(item => item.addEventListener('mouseover', draw))
-
 boxes.forEach(item => item.addEventListener('transitionend', erase))
+
+
+
 
 
 
@@ -75,10 +97,7 @@ function Modify_Box_Num(Num_Boxes_Side){
     }
 
     new_boxes.forEach(item => item.addEventListener('mouseover', draw))
-
     new_boxes.forEach(item => item.addEventListener('transitionend', erase))
-
-
 
 }
 
