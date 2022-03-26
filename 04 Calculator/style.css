@@ -1,0 +1,51 @@
+body {
+    display: flex;
+    justify-content: center;
+    margin-top: 100px;
+    height: 800px;
+}
+
+
+.container {
+
+    width: 400px;
+    height: 670px;
+    border: 2px skyblue solid;
+    border-radius: 20px;
+    padding: 20px;
+
+}
+
+.screen {
+
+    height: 100px;
+    padding: 10px 20px;
+    border: 3px skyblue solid;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    background-color: rgb(170, 214, 218);
+    text-align: right;
+
+}
+
+.buttons {
+
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px 0;
+
+    
+}
+
+.buttons > *{
+
+    width: 100px;
+    aspect-ratio: 1/1;
+    border: 3px lightslategray solid;
+    font-size: 24px;
+}
+
+.clear {
+    width: 200px;
+    height: 100px;
+}

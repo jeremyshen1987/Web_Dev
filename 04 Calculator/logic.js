@@ -1,0 +1,22 @@
+function add(a,b){
+    return a + b
+}
+
+function sub(a,b){
+    return a - b
+}
+
+function multiply(a,b){
+    return a * b
+}
+
+function divide(a,b){
+    return a / b
+}
+
+
+
+function main (operator,num1,num2) {
+
+
+}
