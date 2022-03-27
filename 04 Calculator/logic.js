@@ -17,8 +17,10 @@ function divide(a,b){
 
 screenLwr = document.querySelector('.screenLwr')
 screenUpr = document.querySelector('.screenUppr')
+
 Num_Buttons = document.querySelectorAll('.numbers')
 Operator_Buttons = document.querySelectorAll('.operators')
+
 Clear_Button = document.querySelector('.clear')
 Delete_Button = document.querySelector('.delete')
 
@@ -59,17 +61,29 @@ function GetOperator(Operator){
     }
 
     if(Operator != '='){
+        
         First_Operator = Operator
         OperatorReady = true
+        console.log('get first operator')
+
+        Num1 = parseFloat(screenLwr.textContent)
+        ClearScreen = true
+        console.log('end of GetOperator')
+        screenUpr.textContent = screenLwr.textContent + First_Operator
+    } 
+    else{
+
+        First_Operator = null
+        OperatorReady = false
+        
+        console.log('equal null set')
+
     }
-
-
     
-    Num1 = parseFloat(screenLwr.textContent)
-    ClearScreen = true
-    console.log('end of GetOperator')
+
 
 }
+
 
 function Assessment(Operator){
 
@@ -78,12 +92,16 @@ function Assessment(Operator){
     Second_Operator = Operator
 
     screenLwr.textContent = Cal_Result(Num1,Num2,First_Operator)
-    screenUpr.textContent = `${Num1} ${First_Operator} ${Num2} ${Second_Operator}`
+
+    if(Operator == '='){
+        screenUpr.textContent = `${Num1} ${First_Operator} ${Num2} ${Second_Operator}`
+    }else{
+        screenUpr.textContent = screenLwr.textContent + `${Second_Operator}`
+    }
 
     Num1 = screenLwr.textContent
     Num2 = undefined
-    
-
+    OperatorReady = false
     
 }
 
@@ -127,7 +145,6 @@ function backspace(){
     screenLwr.textContent = removed
 
 }
-
 
 
 
