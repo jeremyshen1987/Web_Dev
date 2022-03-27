@@ -19,6 +19,9 @@ screenLwr = document.querySelector('.screenLwr')
 screenUpr = document.querySelector('.screenUppr')
 Num_Buttons = document.querySelectorAll('.numbers')
 Operator_Buttons = document.querySelectorAll('.operators')
+Clear_Button = document.querySelector('.clear')
+Delete_Button = document.querySelector('.delete')
+
 
 let Num1
 let Num2
@@ -99,13 +102,29 @@ function Cal_Result(num1, num2, operator){
             return multiply(num1,num2)
         
         case "/":
-            return add(num1,num2)
-        
-        case "=":
             return divide(num1,num2)
-        
-
     }
+
+}
+
+function clear(){
+
+    Num1 = undefined
+    Num2 = undefined
+    First_Operator = undefined
+    Second_Operator = undefined
+    OperatorReady = false
+    ClearScreen = false
+    screenUpr.textContent = ''
+    screenLwr.textContent = ''
+
+}
+
+function backspace(){
+
+    console.log('remove')
+    removed = screenLwr.textContent.slice(0,-1)
+    screenLwr.textContent = removed
 
 }
 
@@ -119,3 +138,6 @@ Num_Buttons.forEach( button => {
 Operator_Buttons.forEach( button => {
     button.addEventListener('click', ()=> GetOperator(button.textContent))
 })
+
+Clear_Button.addEventListener('click', clear)
+Delete_Button.addEventListener('click', backspace)

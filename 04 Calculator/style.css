@@ -34,6 +34,11 @@ body {
     
 }
 
+.screenUppr {
+    font-size: 15px;
+    color: lightslategray;
+}
+
 .buttons {
 
     display: flex;
