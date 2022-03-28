@@ -15,14 +15,16 @@ function divide(a,b){
 }
 
 
-screenLwr = document.querySelector('.screenLwr')
-screenUpr = document.querySelector('.screenUppr')
+const screenLwr = document.querySelector('.screenLwr')
+const screenUpr = document.querySelector('.screenUppr')
 
-Num_Buttons = document.querySelectorAll('.numbers')
-Operator_Buttons = document.querySelectorAll('.operators')
+const Num_Buttons = document.querySelectorAll('.numbers')
+const Operator_Buttons = document.querySelectorAll('.operators')
 
-Clear_Button = document.querySelector('.clear')
-Delete_Button = document.querySelector('.delete')
+const Clear_Button = document.querySelector('.clear')
+const Delete_Button = document.querySelector('.delete')
+
+ 
 
 
 let Num1
@@ -30,12 +32,16 @@ let Num2
 let First_Operator
 let Second_Operator
 
-OperatorReady = false
-ClearScreen = false
+let OperatorReady = false
+let ClearScreen = false
 
 function AddNum(Num){
 
     console.log('run')
+
+    if(Num == '.' && screenLwr.textContent.includes('.')){
+        return
+    }
 
     if(ClearScreen){
         screenLwr.textContent = ''
@@ -51,6 +57,8 @@ function AddNum(Num){
 function GetOperator(Operator){
 
     if(ClearScreen){
+        First_Operator = Operator
+        screenUpr.textContent = screenLwr.textContent + First_Operator
         return
     }
     
@@ -75,7 +83,7 @@ function GetOperator(Operator){
 
         First_Operator = null
         OperatorReady = false
-        
+        ClearScreen = true
         console.log('equal null set')
 
     }
@@ -140,9 +148,38 @@ function clear(){
 
 function backspace(){
 
-    console.log('remove')
+    if(OperatorReady = true) return
     removed = screenLwr.textContent.slice(0,-1)
     screenLwr.textContent = removed
+
+}
+
+
+function keyEvent(e){
+
+    key = document.querySelector(`button[data-key="${e.keyCode}"]`);
+    console.log(key)
+    if(Number.isInteger(parseInt(key.textContent))){
+        console.log('kyedown running addNum')
+        AddNum(key.textContent)
+        return
+    }
+    if(key.textContent == '.') {
+        AddNum('.'); 
+        return
+    }
+    if(key.textContent == 'C'){
+        clear()
+        return
+    }
+    if(key.textContent == 'BKSP'){
+        backspace()
+        return
+    }
+    if(key.textContent == '=' || key.textContent == '+' || key.textContent == '-' || key.textContent == '*' || key.textContent == '/'){
+        GetOperator(key.textContent)
+        return
+    }
 
 }
 
@@ -158,3 +195,6 @@ Operator_Buttons.forEach( button => {
 
 Clear_Button.addEventListener('click', clear)
 Delete_Button.addEventListener('click', backspace)
+
+
+window.addEventListener('keydown',(e) => keyEvent(e))
