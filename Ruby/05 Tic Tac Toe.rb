@@ -17,7 +17,6 @@ class Board
         end
     end
 
-
     def self.display_rounds
         @@round_num
     end
@@ -30,6 +29,15 @@ class Board
         @@board_new_game
     end
 
+    def self.win_condition
+        a = @@board_new_game
+        for i in 0..2
+            if ( a[0][i] == a[1][i] && a[1][i] == a[2][i] ) || ( a[i][0] == a[i][1] && a[i][1] == a[i][2]) || ( a[0][0] == a[1][1] && a[1][1] == a[2][2] ) || ( a[0][2] == a[1][1] && a[1][1] == a[2][0] )
+                return "you win"
+            end
+        end
+    end
+
 end
 
 
@@ -38,9 +46,9 @@ class Players
     attr_accessor :name, :marker
   
 
-    def select_name
+    def select_name(var_name)
 
-        puts "please enter your name: "
+        puts "\n\n#{var_name}, please enter your name: "
     
         while true
     
@@ -59,7 +67,7 @@ class Players
 
     def select_marker
 
-        puts "Now select your marker (letter 'o' or 'x') "
+        puts "\n\nNow select your marker (letter 'o' or 'x') "
 
         while true
 
@@ -72,40 +80,34 @@ class Players
 
         @marker = player_marker
     end
-
-
-
 end
 
 
 player1 = Players.new()
 player2 = Players.new()
 
-player1.select_name
+player1.select_name("player_1")
 player1.select_marker
 
-player2.select_name
+player2.select_name("player_2")
 player2.marker = player1.marker =='o' ?  'x' : 'o'
 
-puts "player 1 name is #{player1.name} and the marker is #{player1.marker}"
-puts "player 2 name is #{player2.name} and the marker is #{player2.marker}"
-
+puts "\n\nplayer 1 name is #{player1.name} and the marker is #{player1.marker}"
+puts "player 2 name is #{player2.name} and the marker is #{player2.marker}\n\n"
 
 i = 0
 while i < 10
 
     puts "\n\nRound #{Board.display_rounds}\n\n"
 
-    cur_player = Board.display_rounds.even? ? player1 : player2
+    cur_player = Board.display_rounds.even? ? player2 : player1
 
     Board.display_rounds
     Board.display_board
 
     puts "\n\n#{cur_player.name}, select a number to place your marker: #{cur_player.marker}"
 
-
     board_dup = Board.modify_board
-
     validated =false
 
     while validated == false
@@ -121,9 +123,21 @@ while i < 10
             
             end
         end
+        
+        puts "that's not a valid selection!" if validated == false
+    end
 
-        puts "that's not a valid selection!"
+    w = Board.win_condition
+    if w == "you win"
+        Board.display_board
+        puts "\nGame Over! #{cur_player.name} win!\n"
+        break
+    end
 
+    if i == 8
+        Board.display_board
+        puts "\nGame Over! It's a Draw!\n"
+        break
     end
 
     Board.modify_round 
