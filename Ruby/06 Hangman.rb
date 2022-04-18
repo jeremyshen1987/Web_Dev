@@ -25,9 +25,7 @@ class Words
 
 class Game
 
-    attr_accessor :secret_word, :masked_word, :missed_guess, :correct_guess
-    attr_reader :attempts
-
+    attr_accessor :secret_word, :masked_word, :missed_guess, :correct_guess, :attempts
 
     def initialize(secret_word)
         @secret_word = secret_word
