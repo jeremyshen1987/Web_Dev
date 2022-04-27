@@ -1,11 +1,14 @@
-:root {
-    height: 100vh;
-    width: 80vw;
-    margin: auto;
+* {
+    box-sizing: border-box;
+    --lime-green: #32CD32;
 }
 
 body {
+
     display: flex;
+    height: 100vh;
+    width: 65vw;
+    margin: auto;
     
 }
 
@@ -15,11 +18,64 @@ img {
 }
 
 .container {
+
     display: flex;
     flex-direction: column;
     justify-content: center;
+    
 }
 
 button {
-    margin: 30px;
+    margin: 20px 40px;
+    width: 100px;
+    cursor: pointer;
+    color: white;
+    background-color: var(--lime-green);
+    border: var(--lime-green) 4px solid;
+    border-radius: .5rem;
+}
+
+
+form div {
+    width: 300px;
+    padding: 20px;
+}
+
+input,label {
+    display: block;
+    width: 200px;
+    
+}
+
+
+.left, .right {
+
+    float:left;
+
+}
+
+.checkbox {
+    clear: both;
+}
+
+
+input[type=checkbox] {
+
+    display: inline ;
+    width: 15px;
+    accent-color: limegreen;
+}
+
+
+
+h2, h4, .right {
+
+    margin-left: 35px;
+
+}
+
+legend {
+    margin-left: 20px;
+    background-color: black;
+    color: white;
 }

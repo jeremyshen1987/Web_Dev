@@ -23,29 +23,55 @@
 
             <fieldset>
 
-                <label for="firstName">First Name: </label>
-                <input type="text" id="firstName">
+                <legend>Sign-Up Form</legend>
 
-                <label for="lastName">Last Name: </label>
-                <input type="text" id="lastName">
+                <div class="left">
+                    <label for="firstName">First Name: </label>
+                    <input type="text" id="firstName">
+                </div>
 
+                <div class="right">
+                    <label for="lastName">Last Name: </label>
+                    <input type="text" id="lastName">
+                </div>
                 
-                <label for="phoneNumber">Phone Number: </label>
-                <input type="text" id="phoneNumber">
+                <div class="left">
+                    <label for="phoneNumber">Phone Number: </label>
+                    <input type="text" id="phoneNumber">
+                </div>
 
-                <label for="email">Email: </label>
-                <input type="text" id="email">
+                <div class="right">
+                    <label for="email">Email: </label>
+                    <input type="text" id="email">
+                </div>
 
-                <label for="password">Password: </label>
-                <input type="text" id="password">
+                <div class="left">
+                    <label for="password">Password: </label>
+                    <input type="text" id="password">
+                </div>
 
-                <label for="confirmPW"></label><input type="text" id="confirmPW">
+                <div class="right">
+                    <label for="confirmPW">Confirm Password: </label>
+                    <input type="text" id="confirmPW">
+                </div>
+
+                <div class="checkbox">
+
+                    <label for="subscribe">
+                        <input type="checkbox" id="subscribe" checked>
+                        <span>Yes, I'd like to subscribe to daily newsletter</span>
+                    </label>
+                    
+                </div>
 
             </fieldset>
 
         </form>
 
-        <button type="submit" form="info" value="submit">Submit</button>
+
+        
+
+        <button type="submit" form="info" value="submit">Create Account</button>
 
         <h4>Already have an acocunt? <a href="about:blank">Click here</a></h4>
     </div>
