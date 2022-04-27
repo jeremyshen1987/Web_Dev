@@ -1,6 +1,8 @@
 * {
     box-sizing: border-box;
-    --lime-green: #32CD32;
+    --lime-green: #4e944f;
+    --light-pink: #e78ea9;
+    --super-light-pink: #ffeeee; 
 }
 
 body {
@@ -14,10 +16,13 @@ body {
 
 img {
     width: 25vw;
-    height: 90vh;
+    height: 100vh;
 }
 
 .container {
+
+    min-width: 700px;
+    background-color: #C0D8C0;
 
     display: flex;
     flex-direction: column;
@@ -26,6 +31,7 @@ img {
 }
 
 button {
+    
     margin: 20px 40px;
     width: 100px;
     cursor: pointer;
@@ -68,14 +74,33 @@ input[type=checkbox] {
 
 
 
-h2, h4, .right {
+h3, h4, .right, div#error {
 
     margin-left: 35px;
 
 }
 
+div#error, div#pw_error{
+    font-size: 2rem;
+
+}
+
 legend {
     margin-left: 20px;
-    background-color: black;
+    background-color: var(--lime-green);
     color: white;
+}
+
+input:focus {
+    background-color: var(--super-light-pink)
+}
+
+input[type=text]:invalid, input[type=email]:invalid {
+
+    border: var(--light-pink) 3px solid;
+}
+
+input[type=text]:valid, input[type=email]:valid {
+
+    border: var(--lime-green) 3px solid;
 }

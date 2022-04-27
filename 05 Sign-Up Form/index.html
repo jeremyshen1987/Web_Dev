@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign-Up Form</title>
     <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
 
 </head>
 <body>
@@ -15,51 +16,55 @@
 
     <div class="container">
 
-        <h2>This is not a real online service</h2>
+        <h3>Name: min+max Length;  Phone: Regular Expression</h3>
+        <h3>Email: type=email;    Password: JS</h3>
 
-        <h2>Let's do this!</h2>
-
+        
         <form action="post" id="info">
 
-            <fieldset>
+            <fieldset id="fs">
 
                 <legend>Sign-Up Form</legend>
 
                 <div class="left">
                     <label for="firstName">First Name: </label>
-                    <input type="text" id="firstName">
+                    <input type="text" id="firstName" minlength="3" maxlength="18" required>
                 </div>
 
                 <div class="right">
                     <label for="lastName">Last Name: </label>
-                    <input type="text" id="lastName">
+                    <input type="text" id="lastName" minlength="3" maxlength="18" required>
+                    
                 </div>
                 
                 <div class="left">
                     <label for="phoneNumber">Phone Number: </label>
-                    <input type="text" id="phoneNumber">
+                    <input type="text" id="phoneNumber" placeholder="format: 5873334444" pattern="[0-9]{10}" required>
                 </div>
+
 
                 <div class="right">
                     <label for="email">Email: </label>
-                    <input type="text" id="email">
+                    <input type="email" id="email" required>
                 </div>
 
                 <div class="left">
                     <label for="password">Password: </label>
-                    <input type="text" id="password">
+                    <input type="password" id="password" required>
                 </div>
 
                 <div class="right">
                     <label for="confirmPW">Confirm Password: </label>
-                    <input type="text" id="confirmPW">
+                    <input type="password" id="confirmPW" required>
                 </div>
+
+                <div id="pw_error"></div>
 
                 <div class="checkbox">
 
                     <label for="subscribe">
                         <input type="checkbox" id="subscribe" checked>
-                        <span>Yes, I'd like to subscribe to daily newsletter</span>
+                        Yes, I'd like to subscribe to daily newsletter
                     </label>
                     
                 </div>
@@ -72,6 +77,8 @@
         
 
         <button type="submit" form="info" value="submit">Create Account</button>
+
+        <div id="error"></div>
 
         <h4>Already have an acocunt? <a href="about:blank">Click here</a></h4>
     </div>
