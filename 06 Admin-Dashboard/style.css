@@ -1,12 +1,7 @@
 * {
     box-sizing: border-box;
     --white: #faebd7;
-
-    
-
 }
-
-
 
 .container {
 
@@ -53,8 +48,6 @@
     
 }
 
-
-
 .task_top_child, .task_bottom_child {
     
     max-height: 5vh;
@@ -67,19 +60,27 @@
 }
 
 
-
-
 .right_whole {
 
-    border: blue 4px solid;
+    border: #A0BCC2 4px solid;
 
     display: grid;
     grid-template-rows: .75fr .9fr 10fr;
 
 }
 
-.search_bar {
-    grid-row: 1;
+.search {
+
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    gap: 10px;
+
+}
+
+form {
+    display: inline;
+    flex: 1;
 }
 
 input {
@@ -93,28 +94,9 @@ input {
 
     display: grid;
     grid-template-columns: 3fr .75fr;
-    grid-template-rows: .7fr 4fr 1fr 3fr .7fr;
+    grid-template-rows: .7fr 4fr .7fr 3.5fr .3fr;
     column-gap: 20px;
 
-}
-
-/* <div class="header_project">Your Projects</div>
-<div class="header_announcement">Announcements</div>
-<div class="projects">Lots of cards</div>
-<div class="announcements">announcements cards</div>
-<div class="trending">Trending</div>
-<div class="users">trending cards</div> */
-
-
-.search_bar {
-    display: flex;
-    align-items: center;
-    padding-left: 20px;
-
-}
-
-form {
-    display: inline;
 }
 
 
@@ -133,7 +115,8 @@ div.user_name {
 
 .header_project, .header_announcement, .trending {
 
-    font-size: 1.5rem;
+    font-size: 1.6rem;
+    align-self: center;
 }
 
 .header_project {
@@ -166,11 +149,65 @@ button {
     
 }
 
+.card, .announcements, .users {
+    border-radius: 5%;
+    background-color: white;
+    padding: 15px;
+}
+
 .card {
     border-left: gold 5px solid;
-    border-radius: 5%;
-    padding: 10px;
+}
 
-    background-color: white;
-    color: black;
+.title {
+    font-size: 1.2rem; 
+}
+
+.announcements {
+
+    padding: 15px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.annc {
+    text-align: center;
+    font: 1.2rem;
+}
+
+.content_annc {
+    margin-top: 10px;
+    font: 1rem;
+}
+
+
+hr {
+    width: 80%;
+    margin-top: 20px;
+}
+
+
+.users {
+
+    display: grid;
+    grid-template-rows: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.user {
+    display: grid;
+    grid-template-columns: 1.5fr 3fr;
+}
+img#png {
+    max-width: 40px;
+    grid-column: 1;
+    grid-row: span 2;
+
+}
+
+p.bio, p.atUser{
+    grid-column: 2;
+    margin: 0;
 }
