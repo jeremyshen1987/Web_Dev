@@ -1,14 +1,16 @@
 
 let library = []
+counter = 0
 
 const book =function (title, author, page, read) {
-    this.title = title
-    this.author = author
-    this.read = read ? "you read this book" : "You didn't read or finished the book"
-    this.page = page
-    this.info = function (){
-      console.log(`hey, ${this.read},bookname is ${title}, author is ${author} and have ${this.page} pages`) 
-    }
+
+  this.title = title
+  this.author = author
+  this.read = read ? "you read this book" : "You didn't read or finished the book"
+  this.page = page
+  this.id = counter
+
+  counter++
     
 }
   
@@ -21,33 +23,58 @@ form.addEventListener('submit', (e) => get_book_info(e))
 
 function get_book_info(e){
 
-    e.preventDefault()
+  e.preventDefault()
 
-    console.log('run')
 
-    const title = document.getElementById('title')
-    const author = document.getElementById('author')
-    const page = document.getElementById('page')
-    const read = document.getElementById('read')
+  const title = document.getElementById('title')
+  const author = document.getElementById('author')
+  const page = document.getElementById('page')
+  const read = document.getElementById('read')
 
-    // console.log(author.value)
-    // console.log(page.value)
-    // console.log(read.value)
 
-    // const new_book = title.value
-    const new_book = new book(title.value, author.value, page.value, read.value)
 
-    console.log(new_book.page)
+  const new_book = new book(title.value, author.value, page.value, read.value)
 
-    library.push(new_book)
+  library.push(new_book)
 
-    console.log(library)
-    
-    
+
+  const books = document.querySelector('.books')
+  const div = document.createElement('div')
+
+  div.classList.add('single_book',`uid${counter}`)
+
+  div_title = document.createElement('div')
+  div_author = document.createElement('div')
+  div_page = document.createElement('div')
+  div_read = document.createElement('div')
+
+  del_btn = document.createElement('button')
+  del_btn.innerHTML = 'Remove'
+  del_btn.onclick = function(){
+
+    this.parentElement.remove()
+    alert(this.parentElement.classList)
+
+  };
+
+  books.append(div)
+  div.append(div_title, div_author, div_page, div_read, del_btn)
+  div_title.textContent = title.value
+  div_author.textContent = author.value
+  div_page.textContent = page.value
+  div_read.textContent = read.checked ? 'Read? Yes' : 'Read? Not Yet'
+  
+  close_form()
+
 }
 
 
-// <label for="author">Author: <input type="text" id="author"></label>
-// <label for="title">Title: <input type="text" id="title"></label>
-// <label for="page">Numer of pages:  <input type="text" id="page"></label>
-// <label for="read">I have read the book <input type="checkbox" id="read"></label>
+function open_form(){
+
+  document.querySelector('.form_popup').style.display = 'block'
+
+}
+
+function close_form(){
+  document.querySelector('.form_popup').style.display = 'none'
+}
