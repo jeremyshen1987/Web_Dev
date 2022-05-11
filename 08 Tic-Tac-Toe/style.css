@@ -1,0 +1,44 @@
+* {
+    box-sizing: border-box;
+}
+body {
+
+    width: 80vw;
+    height: 100vh;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+
+}
+
+.container {
+
+    width: 35vw;
+    aspect-ratio: 1/1;
+    margin: 40px auto;
+    /* margin: auto; */
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-auto-flow: row;
+    place-items: center;
+    gap: 15px;
+    border: purple 4px solid;
+}
+
+.container > div {
+
+    width: 10vw;
+    aspect-ratio: 1/1;
+    border: teal 4px solid;
+
+    text-align: center;
+    font-size: 10rem;
+
+}
+
+h1 {
+    text-align: center;
+}

@@ -52,13 +52,23 @@ const player = (name, marker) => {
 
 const control = function(){
 
-    GameBoard.place_marker(3, 'X')
+    // GameBoard.place_marker(3, 'X')
 
-    GameBoard.show_board()
+    // GameBoard.show_board()
 
 }
 
 
+const buttons = document.querySelectorAll('.grid')
 
 
+buttons.forEach((button) => {
+    button.onclick = function(){
+        
+        this.textContent = 'X'
 
+        position = this.dataset.key
+        GameBoard.place_marker(position, 'X')
+
+    }
+});
