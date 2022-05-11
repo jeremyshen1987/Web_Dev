@@ -5,7 +5,7 @@ const GameBoard = (function(){
 
     return {
         show_board: function (){
-            console.log(_board)
+            return _board
         },
 
         place_marker: function(num, marker){
@@ -14,7 +14,10 @@ const GameBoard = (function(){
 
         win: function(Current_Player){
 
-            console.log(`${Current_Player.getName()} win!`)
+            const h1 = document.getElementsByTagName('h1')[0]
+            h1.textContent = `${Current_Player.getName()} is the winner!`
+            this.reset()
+            
         },
 
         win_condition: function(Current_Player){
@@ -35,7 +38,13 @@ const GameBoard = (function(){
         },
 
         reset: function(){
+
             _board = [...Array(9).keys()]
+
+            const buttons = document.querySelectorAll('.grid')
+            buttons.forEach((button) => {
+                button.textContent = ''
+            })
         }
 
 
@@ -67,22 +76,38 @@ const control = (function(){
     let Current_Player = p1
 
     const buttons = document.querySelectorAll('.grid')
+    const h1 = document.getElementsByTagName('h1')[0]
 
+    h1.textContent = "Player_1 ('X') Next"
 
     buttons.forEach((button) => {
 
         button.onclick = function(){
+
+
+            if(this.textContent == 'X' || this.textContent == 'O'){
+                h1.textContent = 'invalid selection!'
+                return
+            }
             
             this.textContent = Current_Player.getMarker()
 
             position = this.dataset.key
             GameBoard.place_marker(position, Current_Player.getMarker())
 
+            Current_Player = players[1 - players.indexOf(Current_Player)]
+            h1.textContent = `${Current_Player.getName()}( ${Current_Player.getMarker()} ) Next`
+
+            let tie =  GameBoard.show_board().every(function(e){
+                return typeof(e) == 'string'
+            }) 
+
+            if (tie == true){
+                h1.textContent = " It's a tie! "
+                GameBoard.reset()
+            }
 
             GameBoard.win_condition(Current_Player)
-
-            Current_Player = players[1 - players.indexOf(Current_Player)]
-
         }
 
     });
