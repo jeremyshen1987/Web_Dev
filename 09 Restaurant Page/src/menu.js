@@ -40,12 +40,12 @@ const menu = () => {
     const item4_price = document.createElement('p')
 
     item1_name.textContent = 'BLT'
-    item1_price.textContent = '$ 7.99 (1LB)'
+    item1_price.textContent = '$ 7.99 (1 LB)'
     item1_desc.textContent = 'Bread, Bacon, lettuce, tomato, avocado '
     
 
     item2_name.textContent = 'Hawaiian Pizza'
-    item2_price.textContent = '$ 3.99 (slice)'
+    item2_price.textContent = '$ 3.99 (1 slice)'
     item2_desc.textContent = 'Pizza, Pineapple, Ham, Cheese, Mozzarella '
 
     item3_name.textContent = 'Greek Salad'
@@ -53,7 +53,7 @@ const menu = () => {
     item3_desc.textContent = 'Bell Pepper, Feta Cheese, Cucumber, Cherry Tomato '
 
     item4_name.textContent = 'Cheesecake'
-    item4_price.textContent = '$ 2.99 (slice)'
+    item4_price.textContent = '$ 2.99 (1 slice)'
     item4_desc.textContent = 'Sugar, Cream, Cheese, Egg, Sour Cream '
 
     const blt_img = new Image()
