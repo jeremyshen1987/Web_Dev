@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <script defer src="./script.js"></script>
+    <title>To-do List</title>
+</head>
+<body>
+    
+    <div class="header">To-Do:</div>
+
+    <div class="sidebar">Projects</div>
+
+    <div class="main">main</div>
+
+    <div class="footer">
+
+        <button data-target="#addTask_container">open form</button>
+
+        <form class="addTask_container" id="addTask_container">
+            <div class="addTask_header" id="addTask_header">
+    
+                <div class="addTask_title" id="addTask_title">
+                    Add a task
+                </div>
+                <button data-close-btn class="close_button" type="button">&times;</button>
+    
+            </div>
+    
+            <div class="addTask_body" id="addTask_body">
+    
+                <label for="taskName"><strong>Task Name:</strong><input type="text" id="taskName" value="My First Task"></label>
+    
+               
+                <label for="Description"><strong>Description:</strong><textarea name="Description" id="Description" cols="30" rows="10" value="task content"></textarea> </label>
+                
+    
+                <label for="dueDate"><strong>Due:</strong><input type="date" id="dueDate"></label>
+                <label for="priority"><strong>Priority:</strong><input type="number" id="priority" value="3"></label>
+                <button  class="newTask" type="button">Submit</button>
+    
+            </div>
+        </form>
+    </div>
+
+
+
+<!-- 
+    <div  id="overlay">
+
+        overlay
+
+    </div> -->
+    
+</body>
+</html>

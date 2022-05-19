@@ -1,0 +1,141 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    width: 100vw;
+    height:100vh;
+    margin: 0;
+    padding: 0;
+    border: gold 2px solid;
+
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    grid-template-rows: 1fr 6fr .3fr;
+
+}
+
+.header {
+    grid-column: 1/-1;
+    background-color: teal;
+
+    font-size: 3rem;
+    font-weight: bold;
+    line-height: calc(100vh / 7.5);
+}
+
+.sidebar {
+    background-color: #6D8B74;
+    font-size: 2rem;
+}
+
+.main {
+    background-color: #30475E;
+    font-size: 2rem;
+}
+
+.footer {
+    grid-column: 1/-1;
+    text-align: center;
+    line-height: calc(100vh * 0.3 / 7.5);
+    background-color: #7E7474;
+}
+
+
+
+.addTask_container {
+
+    width: 35vw;
+    aspect-ratio: 1/.8;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%) scale(0);
+    transition: 200ms ease-in-out;
+    border: black 2px solid;
+    border-radius: 10px;
+    background-color: white;
+    z-index: 8;
+}
+
+.addTask_container.active {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.addTask_header {
+    padding: 10px 10px 10px 25px;
+    border-bottom: lightslategray 1px solid;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    
+}
+
+.addTask_title {
+    font-size: 1.75rem;
+    font-weight: bold;
+}
+
+.close_button {
+
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+
+.addTask_body {
+    padding: 15px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+label, input, textarea {
+    display: block;
+    padding: 10px;
+    text-align: start;
+}
+
+input {
+    height: 30px;
+}
+
+textarea {
+    height: 8rem;
+    width: 80%;
+}
+
+input, textarea {
+    margin-bottom: 10px;
+}
+
+button.newTask {
+    align-self: flex-end;
+}
+
+/* #overlay {
+
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    opacity: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    transition: 200ms;
+    pointer-events: none;
+
+    border: gold 2px solid;
+
+} */
+/* 
+#overlay.active {
+    opacity: 1;
+    pointer-events: all;
+} */
