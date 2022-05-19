@@ -30,8 +30,14 @@ body {
 }
 
 .main {
-    background-color: #30475E;
-    font-size: 2rem;
+
+    background-color: #04293A;
+    
+    padding: 20px;
+
+    display: flex;
+    flex-direction: column;
+
 }
 
 .footer {
@@ -118,6 +124,31 @@ input, textarea {
 button.newTask {
     align-self: flex-end;
 }
+
+
+.list_header {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #8FD6E1;
+}
+
+.list_body {
+    
+    font-size: 1.2rem;
+    color: #F39422;
+
+    height: 60px;
+    max-height: 60px;
+    border: lightseagreen 2px solid;
+
+    flex: 1;
+}
+
+
+
+
+
+
 
 /* #overlay {
 

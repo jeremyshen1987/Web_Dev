@@ -5,6 +5,7 @@ const toDo = (name, description, due_date, priority) => {
     const getDesc = ()=> description;
     const getDueDate = ()=> due_date;
     const getPriority = ()=> priority;
+    const getID = ()=> lists.length
 
     const setName = (new_name)=> name = new_name;
     const setDesc = (new_description)=> description = new_description
@@ -12,7 +13,7 @@ const toDo = (name, description, due_date, priority) => {
     const setPriority = (new_priority)=> description = new_priority
     
     return{
-        getName, getDesc, getDueDate, getPriority,
+        getName, getDesc, getDueDate, getPriority, getID,
         setName, setDesc, setDueDate, setPriority
     }
 
@@ -21,17 +22,34 @@ const toDo = (name, description, due_date, priority) => {
 function newTask(e){
 
     console.log('submitted')
-    e.preventDefault()
 
-    const name = document.querySelector('#taskName')
-    const description = document.querySelector('#Description')
-    const due_date = document.querySelector('#dueDate')
-    const priority = document.querySelector('#priority')
+    const name = document.querySelector('#taskName').value
+    const description = document.querySelector('#Description').value
+    const due_date = document.querySelector('#dueDate').value
+    const priority = document.querySelector('#priority').value
 
-    const newTask = toDo(name.value, description.value, due_date.value, priority.value)
+    const newTask = toDo(name, description, due_date, priority)
     lists.push(newTask)
 
+    append_div(name, description)
+
     addTask_container.classList.remove('active')
+
+}
+
+function append_div(name, description){
+
+    const main = document.querySelector('.main')
+    const list_header = document.createElement('div')
+    const list_body = document.createElement('div')
+
+    list_header.textContent = name
+    list_body.textContent = description
+
+    list_header.classList.add('list_header')
+    list_body.classList.add('list_body')
+
+    main.append(list_header,list_body)
 }
 
 
@@ -45,30 +63,30 @@ const btn_close_addTask = document.querySelector('[data-close-btn]')
 const addTask_container = document.querySelector('.addTask_container')
 
 btn_addTask.addEventListener('click', ()=>{
-
-    console.log('open')
-    
+ 
     openForm(addTask_container)
 
 })
 
 btn_close_addTask.addEventListener('click', ()=>{
 
-    console.log('close')
     closeForm(addTask_container)
 
 })
 
 function openForm(addTask_container){
+
     addTask_container.classList.add('active')
 
     console.log('open form')
 
     const btn_newTask = document.querySelector('.newTask')
     
-    console.log(btn_newTask)
 
-    btn_newTask.addEventListener('click', (e) => newTask(e))
+    btn_newTask.addEventListener('click', (e) => newTask(e), {once:true})
+
+    // btn_newTask.onclick = ()=> newTask()
+
     // overlay.classList.add('active')
 }
 
