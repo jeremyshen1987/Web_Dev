@@ -68,12 +68,10 @@ function append_div(name, description){
             if (project.name() == projects.current_project()){
 
                 const tasks = project.show_tasks()
-                
-                project.reomve_task( tasks.forEach((task) => {
-                    if (task.getName() == task_name) {
-                        return tasks.indexOf(task)
-                    }
-                  }) )
+                const new_list = tasks.filter(task => task.getName() !== task_name)
+
+                project.update_tasks(new_list)
+
             }
         })
 
@@ -187,8 +185,8 @@ const individual_project = (name) => {
             task_list.push(task)
         },
 
-        reomve_task: function(index){
-            task_list.splice(index, 1)
+        update_tasks: function(new_list){
+            task_list = new_list
         },
 
         show_tasks: function() {
