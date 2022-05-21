@@ -11,15 +11,18 @@
 </head>
 <body>
     
-    <div class="header">To-Do:</div>
+    <div class="header">Tasks</div>
 
-    <div class="sidebar"></div>
+    <div class="sidebar">
+        <!-- <i class='btn_project_add fa-solid fa-circle-plus'></i> -->
+        <button class="btn_project_add" type="button" onclick="btn_new_project()">&oplus;</button>
+    </div>
 
     <div class="main"></div>
 
     <div class="footer">
 
-        <button data-target="#addTask_container">New Task</button>
+        <button data-target="#addTask_container">+</button>
 
         <form class="addTask_container" id="addTask_container">
             <div class="addTask_header" id="addTask_header">
@@ -39,8 +42,8 @@
                 <label for="Description"><strong>Description:</strong><textarea name="Description" id="Description" cols="30" rows="10" value="task content"></textarea> </label>
                 
     
-                <label for="dueDate"><strong>Due:</strong><input type="date" id="dueDate"></label>
-                <label for="priority"><strong>Priority:</strong><input type="number" id="priority" value="3"></label>
+                <label for="dueDate"><strong>Due:</strong><input type="date" id="dueDate" value="2022-05-21"></label>
+                <label for="priority"><strong>Priority:</strong><input type="number" id="priority" value="5"></label>
                 <button  class="newTask" type="button">Submit</button>
     
             </div>

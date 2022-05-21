@@ -1,27 +1,24 @@
 
-const toDo = (name, description, due_date, priority, project = 'Default') => {
+const toDo = (name, description, due_date, priority) => {
 
     const getName = ()=> name;
     const getDesc = ()=> description;
     const getDueDate = ()=> due_date;
     const getPriority = ()=> priority;
-    const getID = ()=> database.show_tasks().length
-    const getProject = ()=> project
 
     const setName = (new_name)=> name = new_name;
     const setDesc = (new_description)=> description = new_description
     const setDueDate = (new_DueDate)=> description = new_DueDate
     const setPriority = (new_priority)=> description = new_priority
-    const setProject = (new_project) => project = new_project
     
     return{
-        getName, getDesc, getDueDate, getPriority, getID, getProject,
-        setName, setDesc, setDueDate, setPriority, setProject
+        getName, getDesc, getDueDate, getPriority,
+        setName, setDesc, setDueDate, setPriority, 
     }
 
 }
 
-function newTask(database){
+function newTask(){
 
     console.log('submitted')
 
@@ -30,7 +27,7 @@ function newTask(database){
     const due_date = document.querySelector('#dueDate').value
     const priority = document.querySelector('#priority').value
 
-    append_div(name, description)
+    display_task_DOM(name, description, due_date, priority)
 
     const newTask = toDo(name, description, due_date, priority)
     append_to_project_list(newTask)
@@ -40,26 +37,36 @@ function newTask(database){
 
 }
 
-function append_div(name, description){
+function display_task_DOM(name, description, due_date, priority){
 
     const main = document.querySelector('.main')
     const wrapper = document.createElement('div')
-    const list_header = document.createElement('div')
-    const list_body = document.createElement('div')
+    const task_name = document.createElement('span')
+    const task_description = document.createElement('div')
+    const task_due_date = document.createElement('span')
+    const task_priority = document.createElement('span')
+    const line_break = document.createElement('hr')
 
-    list_header.textContent = name
-    list_body.textContent = description
+    console.log(due_date)
 
-    list_header.classList.add('list_header')
-    list_body.classList.add('list_body')
+    task_name.textContent = name
+    task_description.textContent = description
+    task_due_date.textContent = `Due ${due_date.slice(5)}`
+    task_priority.textContent = `Priority ${priority}`
+
+    wrapper.classList.add('wrapper')
+    task_name.classList.add('list_header')
+    task_description.classList.add('list_body')
 
     del_btn = document.createElement('button')
-    del_btn.innerHTML = 'Remove'
+    del_btn.classList.add('close_button')
+    del_btn.style.color = '#EC994B'
+    del_btn.innerHTML = '&times;'
     del_btn.onclick = function(){
   
         console.log(projects.current_project())
 
-        task_name = this.parentElement.firstChild.textContent
+        title = this.parentElement.firstChild.textContent
 
         const all_projects = projects.show_projects()
 
@@ -68,7 +75,7 @@ function append_div(name, description){
             if (project.name() == projects.current_project()){
 
                 const tasks = project.show_tasks()
-                const new_list = tasks.filter(task => task.getName() !== task_name)
+                const new_list = tasks.filter(task => task.getName() !== title)
 
                 project.update_tasks(new_list)
 
@@ -79,7 +86,7 @@ function append_div(name, description){
   
     };
 
-    wrapper.append(list_header,list_body, del_btn)
+    wrapper.append(task_name, task_priority, task_due_date, del_btn, line_break, task_description)
 
     main.append(wrapper)
 }
@@ -132,16 +139,43 @@ const projects = (function(){
 
 })()
 
+const individual_project = (name) => {
+    
+    const _project_name = name
+    let _task_list = []
+
+    return {
+
+        name: () => {
+            return _project_name
+        },
+
+        task_to_project: function(task){
+            _task_list.push(task)
+        },
+
+        update_tasks: function(new_list){
+            _task_list = new_list
+        },
+
+        show_tasks: function(){
+            return _task_list
+        }
+
+    }
+    
+}
+
 
 
 function createProject_DOM(name){
     
-    const sidebar = document.querySelector('.sidebar')
-    const button = document.createElement('button')
-    button.classList.add('project')
-    button.textContent = name
-    button.type = 'button'
-    button.onclick = function(){
+    const btn_project_add = document.querySelector('.btn_project_add')
+    const project_tab = document.createElement('button')
+    project_tab.classList.add('project')
+    project_tab.textContent = name
+    project_tab.type = 'button'
+    project_tab.onclick = function(){
        
     
         clear_lists()
@@ -154,54 +188,33 @@ function createProject_DOM(name){
             if (project.name() == projects.current_project()){
                 console.log('found project')
                 project.show_tasks().forEach((task) => {
-                    append_div(task.getName(), task.getDesc())
+                    display_task_DOM(task.getName(), task.getDesc(), task.getDueDate(), task.getPriority())
                 })
             }
         } )
 
     }
 
-    sidebar.append(button)
+    btn_project_add.insertAdjacentElement('beforebegin', project_tab)
     
-    const new_project =  individual_project(name)
+    const new_project = individual_project(name)
     projects.add_Project(new_project)
     
     console.log(projects.show_projects())
     
 }
 
-const individual_project = (name) => {
-    
-    const project_name = name
-    let task_list = []
+function btn_new_project(){
 
-    return {
+    project_name = prompt('Project Name: ')
+    if(project_name == '' || project_name == null){return}
 
-        name: () => {
-            return project_name
-        },
-
-        task_to_project: function(task){
-            task_list.push(task)
-        },
-
-        update_tasks: function(new_list){
-            task_list = new_list
-        },
-
-        show_tasks: function() {
-            return task_list
-        }
-
-    }
-    
+    createProject_DOM(project_name)
 }
 
 
 createProject_DOM('Default')
-createProject_DOM('xcom')
-
-
+createProject_DOM('Web_Dev')
 
 
 
@@ -228,12 +241,9 @@ function openForm(addTask_container){
 
     addTask_container.classList.add('active')
 
-    console.log('open form')
-
     const btn_newTask = document.querySelector('.newTask')
     
-
-    btn_newTask.addEventListener('click', (e) => newTask(e), {once:true})
+    btn_newTask.addEventListener('click', () => newTask(), {once:true})
 
 
 }
@@ -241,7 +251,6 @@ function openForm(addTask_container){
 function closeForm(){
 
     addTask_container.classList.remove('active')
-
 }
 
 

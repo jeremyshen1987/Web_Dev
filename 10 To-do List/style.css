@@ -7,7 +7,7 @@ body {
     height:100vh;
     margin: 0;
     padding: 0;
-    border: gold 2px solid;
+    position: relative;
 
     display: grid;
     grid-template-columns: 1fr 4fr;
@@ -17,15 +17,16 @@ body {
 
 .header {
     grid-column: 1/-1;
-    background-color: teal;
+    background-color: #003F5C;
 
     font-size: 3rem;
     font-weight: bold;
     line-height: calc(100vh / 7.5);
+    text-align: center;
 }
 
 .sidebar {
-    background-color: #6D8B74;
+    background-color: #044343;
     font-size: 2rem;
 }
 
@@ -44,7 +45,7 @@ body {
     grid-column: 1/-1;
     text-align: center;
     line-height: calc(100vh * 0.3 / 7.5);
-    background-color: #7E7474;
+    background-color: #334756;
 }
 
 
@@ -125,41 +126,75 @@ button.newTask {
     align-self: flex-end;
 }
 
+.wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    border: 30px;
+}
 
 .list_header {
-    font-size: 2rem;
+    flex: 1;
+    font-size: 1.5rem;
     font-weight: bold;
     color: #8FD6E1;
 }
 
-.list_body {
-    
+span {
     font-size: 1.2rem;
-    color: #F39422;
-
-    height: 60px;
-    max-height: 60px;
-    border: lightseagreen 2px solid;
-
-    flex: 1;
+    color: #82DBD8;
+    padding: 0 5px;
+    margin-right: 15px;
 }
 
-.project {
+hr {
+    width: 100%;
+    opacity: 0;
+}
+
+.list_body {
+    
+    flex: 1;
+
+    font-size: 1.2rem;
+    color: #F39422;
+    min-height: 50px;
+    max-height: 300px;
+    border-bottom: #1D5C63 1px solid;
+    padding: 15px 5px;
+    margin-bottom: 20px;
+    
+}
+
+.project, .btn_project_add {
 
     width: calc(100vw / 5);
     aspect-ratio: 1/.2;
+    font-size: 1.8rem;
 
     margin: 10px 5px;
-
-    border: #B7E5DD 2px solid;
-
-    background: none;
-
+    background: #82A284;
+    border-radius: 5px;
 }
 
+.btn_project_add {
+    border: dotted;
+    opacity: .4;
+}
 
+button[data-target="#addTask_container"] {
+    background-color: #03506F;
 
+    position: absolute;
+    right: calc(100vw / 20);
+    bottom: calc((100vh / 7.3 * .3) + 35px);
+    height: 80px;
+    width: 80px;
+    border-radius: 40px;
+    line-height: 100%;
 
+    font-size: 3rem;
+}
 
 
 /* #overlay {
