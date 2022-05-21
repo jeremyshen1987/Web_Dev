@@ -57,7 +57,27 @@ function append_div(name, description){
     del_btn.innerHTML = 'Remove'
     del_btn.onclick = function(){
   
-      this.parentElement.remove()
+        console.log(projects.current_project())
+
+        task_name = this.parentElement.firstChild.textContent
+
+        const all_projects = projects.show_projects()
+
+        all_projects.forEach((project) => {
+
+            if (project.name() == projects.current_project()){
+
+                const tasks = project.show_tasks()
+                
+                project.reomve_task( tasks.forEach((task) => {
+                    if (task.getName() == task_name) {
+                        return tasks.indexOf(task)
+                    }
+                  }) )
+            }
+        })
+
+    this.parentElement.remove()
   
     };
 
@@ -145,14 +165,14 @@ function createProject_DOM(name){
 
     sidebar.append(button)
     
-    const new_project =  createProject(name)
+    const new_project =  individual_project(name)
     projects.add_Project(new_project)
     
     console.log(projects.show_projects())
     
 }
 
-const createProject = (name) => {
+const individual_project = (name) => {
     
     const project_name = name
     let task_list = []
@@ -165,6 +185,10 @@ const createProject = (name) => {
 
         task_to_project: function(task){
             task_list.push(task)
+        },
+
+        reomve_task: function(index){
+            task_list.splice(index, 1)
         },
 
         show_tasks: function() {
