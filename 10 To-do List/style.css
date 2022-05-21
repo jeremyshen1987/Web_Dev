@@ -144,6 +144,18 @@ button.newTask {
     flex: 1;
 }
 
+.project {
+
+    width: calc(100vw / 5);
+    aspect-ratio: 1/.2;
+
+    margin: 10px 5px;
+
+    border: #B7E5DD 2px solid;
+
+    background: none;
+
+}
 
 
 
