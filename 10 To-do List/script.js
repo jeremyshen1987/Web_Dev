@@ -1,4 +1,3 @@
-// let projects = []
 
 const toDo = (name, description, due_date, priority, project = 'Default') => {
 
@@ -59,7 +58,6 @@ function append_div(name, description){
     del_btn.onclick = function(){
   
       this.parentElement.remove()
-      
   
     };
 
@@ -126,14 +124,26 @@ function createProject_DOM(name){
     button.textContent = name
     button.type = 'button'
     button.onclick = function(){
-        console.log('hi')
-        projects.setProject(name)
+       
+    
         clear_lists()
+
+        projects.setProject(this.textContent)
+
+        console.log(projects.current_project())
+        projects.show_projects().forEach((project) => {
+
+            if (project.name() == projects.current_project()){
+                console.log('found project')
+                project.show_tasks().forEach((task) => {
+                    append_div(task.getName(), task.getDesc())
+                })
+            }
+        } )
+
     }
 
     sidebar.append(button)
-
-    
     
     const new_project =  createProject(name)
     projects.add_Project(new_project)
