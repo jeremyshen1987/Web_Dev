@@ -32,9 +32,9 @@ body {
 
 .main {
 
+    /* background-color: #1D2D50; */
     background-color: #04293A;
-    
-    padding: 20px;
+    padding: 40px;
 
     display: flex;
     flex-direction: column;
@@ -50,7 +50,7 @@ body {
 
 
 
-.addTask_container {
+.addTask_container, .editTask_container {
 
     width: 35vw;
     aspect-ratio: 1/.8;
@@ -66,11 +66,11 @@ body {
     z-index: 8;
 }
 
-.addTask_container.active {
+.addTask_container.active, .editTask_container.active {
     transform: translate(-50%, -50%) scale(1);
 }
 
-.addTask_header {
+.addTask_header, .editTask_header {
     padding: 10px 10px 10px 25px;
     border-bottom: lightslategray 1px solid;
 
@@ -81,7 +81,7 @@ body {
     
 }
 
-.addTask_title {
+.addTask_title, .editTask_title {
     font-size: 1.75rem;
     font-weight: bold;
 }
@@ -95,7 +95,7 @@ body {
     background: none;
 }
 
-.addTask_body {
+.addTask_body, .editTask_body {
     padding: 15px;
 
     display: flex;
@@ -127,6 +127,8 @@ button.newTask {
 }
 
 .wrapper {
+    /* background-color: #133B5C; */
+
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -137,7 +139,7 @@ button.newTask {
     flex: 1;
     font-size: 1.5rem;
     font-weight: bold;
-    color: #8FD6E1;
+    color: #FCDAB7;
 }
 
 span {

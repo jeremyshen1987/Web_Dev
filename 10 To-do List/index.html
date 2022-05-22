@@ -48,6 +48,32 @@
     
             </div>
         </form>
+
+        <form class="editTask_container" id="editTask_container">
+            <div class="editTask_header" id="editTask_header">
+    
+                <div class="editTask_title" id="editTask_title">
+                    Edit task
+                </div>
+                <button data-close-edit-btn class="close_edit_button" type="button">&times;</button>
+    
+            </div>
+    
+            <div class="editTask_body" id="editTask_body">
+    
+                <label for="taskName"><strong>Task Name:</strong><input type="text" id="taskName" value="My First Task"></label>
+    
+               
+                <label for="Description"><strong>Description:</strong><textarea name="Description" id="Description" cols="30" rows="10" value="task content"></textarea> </label>
+                
+    
+                <label for="dueDate"><strong>Due:</strong><input type="date" id="dueDate" value="2022-05-21"></label>
+                <label for="priority"><strong>Priority:</strong><input type="number" id="priority" value="5"></label>
+                <button  class="newTask" type="button">Submit</button>
+    
+            </div>
+        </form>
+
     </div>
 
 

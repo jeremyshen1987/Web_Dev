@@ -37,6 +37,14 @@ function newTask(){
 
 }
 
+function editTask(e){
+    console.log(e.target)
+
+    editTask_container.classList.add('active')
+
+    
+}
+
 function display_task_DOM(name, description, due_date, priority){
 
     const main = document.querySelector('.main')
@@ -57,6 +65,12 @@ function display_task_DOM(name, description, due_date, priority){
     wrapper.classList.add('wrapper')
     task_name.classList.add('list_header')
     task_description.classList.add('list_body')
+
+    edit_btn = document.createElement('button')
+    edit_btn.classList.add('edit_button')
+    edit_btn.style.color = '#519872'
+    edit_btn.innerHTML = '&#8801;'
+    edit_btn.onclick = (e)=> editTask(e)
 
     del_btn = document.createElement('button')
     del_btn.classList.add('close_button')
@@ -86,7 +100,7 @@ function display_task_DOM(name, description, due_date, priority){
   
     };
 
-    wrapper.append(task_name, task_priority, task_due_date, del_btn, line_break, task_description)
+    wrapper.append(task_name, task_priority, task_due_date, edit_btn, del_btn, line_break, task_description)
 
     main.append(wrapper)
 }
@@ -217,13 +231,31 @@ createProject_DOM('Default')
 createProject_DOM('Web_Dev')
 
 
+function get_task(task_name){
+
+    arr_projects_name = projects.show_projects().map(el => el.name())
+    project_id = arr_projects_name.indexOf(projects.current_project())
+    project = projects.show_projects()[project_id]
+
+    arr_tasks_name = project.show_tasks().map(el => el.getName())
+    task_id = arr_tasks_name.indexOf(task_name)
+    console.log(task_id)
+    task = project.show_tasks()[task_id]
+
+    return task
+}
+
+
 
 ////////////////////////////////////////////////
 
 const btn_addTask = document.querySelector('[data-target]')
 const btn_close_addTask = document.querySelector('[data-close-btn]')
+const btn_close_editTask = document.querySelector('[data-close-edit-btn]')
 
 const addTask_container = document.querySelector('.addTask_container')
+const editTask_container = document.querySelector('.editTask_container')
+
 
 btn_addTask.addEventListener('click', ()=>{
  
@@ -236,6 +268,13 @@ btn_close_addTask.addEventListener('click', ()=>{
     closeForm(addTask_container)
 
 })
+
+btn_close_editTask.addEventListener('click', ()=>{
+
+    closeForm(editTask_container) 
+})
+
+
 
 function openForm(addTask_container){
 
@@ -251,6 +290,7 @@ function openForm(addTask_container){
 function closeForm(){
 
     addTask_container.classList.remove('active')
+    editTask_container.classList.remove('active')
 }
 
 
