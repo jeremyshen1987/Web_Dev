@@ -8,8 +8,8 @@ const toDo = (name, description, due_date, priority) => {
 
     const setName = (new_name)=> name = new_name;
     const setDesc = (new_description)=> description = new_description
-    const setDueDate = (new_DueDate)=> description = new_DueDate
-    const setPriority = (new_priority)=> description = new_priority
+    const setDueDate = (new_DueDate)=> due_date = new_DueDate
+    const setPriority = (new_priority)=> priority = new_priority
     
     return{
         getName, getDesc, getDueDate, getPriority,
@@ -18,7 +18,7 @@ const toDo = (name, description, due_date, priority) => {
 
 }
 
-function newTask(){
+function submit_newTask(){
 
     console.log('submitted')
 
@@ -30,19 +30,58 @@ function newTask(){
     display_task_DOM(name, description, due_date, priority)
 
     const newTask = toDo(name, description, due_date, priority)
-    append_to_project_list(newTask)
+    append_task_to_project(newTask)
 
 
     addTask_container.classList.remove('active')
 
 }
 
+function submit_editTask(){
+
+    console.log('hahaha')
+    console.log(edit_taskName.value)
+ 
+    task_item.setName(edit_taskName.value)
+    task_item.setDesc(edit_Description.value)
+    task_item.setDueDate(edit_dueDate.value)
+    task_item.setPriority(parseInt(edit_priority.value))
+
+    closeForm()
+
+    const btn_project = document.querySelector(`[data-key="${projects.current_project()}"]`)
+    btn_project.click()
+
+}
+
 function editTask(e){
-    console.log(e.target)
+    
+    button = e.target
+    task_name = button.parentElement.firstChild.textContent
+    task_item = get_task(task_name)
 
     editTask_container.classList.add('active')
 
-    
+    edit_taskName = document.querySelector('#edit_taskName') 
+    edit_Description = document.querySelector('#edit_Description')
+    edit_dueDate = document.querySelector('#edit_dueDate')
+    edit_priority = document.querySelector('#edit_priority')
+
+
+    edit_taskName.value = task_item.getName()
+    edit_Description.value = task_item.getDesc()
+    edit_dueDate.value = task_item.getDueDate()
+    edit_priority.value = task_item.getPriority()
+
+    edit_taskName.addEventListener('input', (e) => {edit_taskName.value = e.target.value})
+    edit_Description.addEventListener('input', (e) => {edit_Description.value = e.target.value})
+    edit_dueDate.addEventListener('change', (e) => {console.log(e.target.value), edit_dueDate.value = e.target.value})
+    edit_priority.addEventListener('change', (e) => {edit_priority.value = e.target.value})
+
+    const btn_submit_editTask = document.querySelector('.edit_task')
+
+    btn_submit_editTask.onclick = () => submit_editTask(task_item, edit_taskName, edit_Description, edit_dueDate, edit_priority)
+
 }
 
 function display_task_DOM(name, description, due_date, priority){
@@ -105,7 +144,7 @@ function display_task_DOM(name, description, due_date, priority){
     main.append(wrapper)
 }
 
-function append_to_project_list (newTask){
+function append_task_to_project (newTask){
 
 
     projects.show_projects().forEach((project) => {
@@ -187,26 +226,23 @@ function createProject_DOM(name){
     const btn_project_add = document.querySelector('.btn_project_add')
     const project_tab = document.createElement('button')
     project_tab.classList.add('project')
+    project_tab.dataset.key = name
     project_tab.textContent = name
     project_tab.type = 'button'
     project_tab.onclick = function(){
-       
-    
         clear_lists()
 
         projects.setProject(this.textContent)
-
+    
         console.log(projects.current_project())
         projects.show_projects().forEach((project) => {
-
+    
             if (project.name() == projects.current_project()){
-                console.log('found project')
                 project.show_tasks().forEach((task) => {
                     display_task_DOM(task.getName(), task.getDesc(), task.getDueDate(), task.getPriority())
                 })
             }
         } )
-
     }
 
     btn_project_add.insertAdjacentElement('beforebegin', project_tab)
@@ -246,7 +282,6 @@ function get_task(task_name){
 }
 
 
-
 ////////////////////////////////////////////////
 
 const btn_addTask = document.querySelector('[data-target]')
@@ -265,13 +300,13 @@ btn_addTask.addEventListener('click', ()=>{
 
 btn_close_addTask.addEventListener('click', ()=>{
 
-    closeForm(addTask_container)
+    closeForm()
 
 })
 
 btn_close_editTask.addEventListener('click', ()=>{
 
-    closeForm(editTask_container) 
+    closeForm() 
 })
 
 
@@ -281,8 +316,10 @@ function openForm(addTask_container){
     addTask_container.classList.add('active')
 
     const btn_newTask = document.querySelector('.newTask')
+
+    btn_newTask.onclick = ()=> submit_newTask()
     
-    btn_newTask.addEventListener('click', () => newTask(), {once:true})
+    // btn_newTask.addEventListener('click', () => submit_newTask(), {once:true})
 
 
 }

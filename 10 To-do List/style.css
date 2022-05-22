@@ -86,7 +86,7 @@ body {
     font-weight: bold;
 }
 
-.close_button {
+.close_button, .close_edit_button {
 
     font-size: 2rem;
     font-weight: bold;
@@ -122,7 +122,7 @@ input, textarea {
     margin-bottom: 10px;
 }
 
-button.newTask {
+button.newTask, .edit_task {
     align-self: flex-end;
 }
 
