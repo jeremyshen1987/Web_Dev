@@ -2,6 +2,7 @@
     box-sizing: border-box;
     --dark-green: #044343;
     --light-green: #82A284;
+    --bright-green: #A3F7BF;
 }
 
 body {
@@ -34,13 +35,16 @@ body {
 
 .main {
 
-    /* background-color: #1D2D50; */
     background-color: #04293A;
     padding: 40px;
 
     display: flex;
     flex-direction: column;
 
+}
+
+.sidebar, .main{
+    overflow: auto;
 }
 
 .footer {
@@ -134,7 +138,6 @@ button.newTask, .edit_task {
 }
 
 .wrapper {
-    /* background-color: #133B5C; */
 
     display: flex;
     flex-wrap: wrap;
@@ -146,7 +149,7 @@ button.newTask, .edit_task {
     flex: 1;
     font-size: 1.5rem;
     font-weight: bold;
-    color: #FCDAB7;
+    color: #C8C6C6;
 }
 
 span {
@@ -166,7 +169,7 @@ hr {
     flex: 1;
 
     font-size: 1.2rem;
-    color: #F39422;
+    color: #476072;
     min-height: 50px;
     max-height: 300px;
     border-bottom: #1D5C63 1px solid;
@@ -177,13 +180,32 @@ hr {
 
 .project, .btn_project_add {
 
-    width: calc(100vw / 5);
+    width: calc((100vw / 5) - 10px);
     aspect-ratio: 1/.2;
     font-size: 1.8rem;
 
     margin: 10px 5px;
     background: var(--light-green);
     border-radius: 5px;
+}
+
+.project {
+    position: relative
+}
+
+.btn_remove_project {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    font-size: 2rem;
+    background: none;
+    border: none;
+    opacity: .2;
+}
+
+.btn_remove_project:hover{
+    opacity: 1;
 }
 
 .btn_project_add {
@@ -224,23 +246,6 @@ button[data-target="#addTask_container"]:hover {
     cursor: pointer;
 }
 
-/* #overlay {
-
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    opacity: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    transition: 200ms;
-    pointer-events: none;
-
-    border: gold 2px solid;
-
-} */
-/* 
-#overlay.active {
-    opacity: 1;
-    pointer-events: all;
-} */
+.green_border {
+    border: #A3F7BF 2px solid;
+}

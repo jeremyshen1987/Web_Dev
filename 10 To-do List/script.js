@@ -20,8 +20,6 @@ const task_factory = (name, description, due_date, priority) => {
 
 function submit_newTask(){
 
-    console.log('submitted')
-
     const name = document.querySelector('#taskName').value
     const description = document.querySelector('#Description').value
     const due_date = document.querySelector('#dueDate').value
@@ -46,9 +44,6 @@ function submit_newTask(){
 
 function submit_editTask(){
 
-    console.log('hahaha')
-    console.log(edit_taskName.value)
- 
     task_item.setName(edit_taskName.value)
     task_item.setDesc(edit_Description.value)
     task_item.setDueDate(edit_dueDate.value)
@@ -82,7 +77,7 @@ function editTask(e){
 
     edit_taskName.addEventListener('input', (e) => {edit_taskName.value = e.target.value})
     edit_Description.addEventListener('input', (e) => {edit_Description.value = e.target.value})
-    edit_dueDate.addEventListener('change', (e) => {console.log(e.target.value), edit_dueDate.value = e.target.value})
+    edit_dueDate.addEventListener('change', (e) => { edit_dueDate.value = e.target.value})
     edit_priority.addEventListener('change', (e) => {edit_priority.value = e.target.value})
 
     const btn_submit_editTask = document.querySelector('.edit_task')
@@ -100,8 +95,6 @@ function display_task_DOM(name, description, due_date, priority){
     const task_due_date = document.createElement('span')
     const task_priority = document.createElement('span')
     const line_break = document.createElement('hr')
-
-    console.log(due_date)
 
     task_name.textContent = name
     task_description.textContent = description
@@ -124,8 +117,6 @@ function display_task_DOM(name, description, due_date, priority){
     del_btn.innerHTML = '&times;'
     del_btn.onclick = function(){
   
-        console.log(projects.current_project())
-
         title = this.parentElement.firstChild.textContent
 
         const all_projects = projects.show_projects()
@@ -237,11 +228,10 @@ function createProject_DOM(name){
     project_tab.textContent = name
     project_tab.type = 'button'
     project_tab.onclick = function(){
-        clear_lists()
 
-        projects.setProject(this.textContent)
-    
-        console.log(projects.current_project())
+        clear_task_list()
+
+        projects.setProject(this.dataset.key)
         projects.show_projects().forEach((project) => {
     
             if (project.name() == projects.current_project()){
@@ -250,14 +240,24 @@ function createProject_DOM(name){
                 })
             }
         } )
+
+
+        const binding = this
+        css_add_border(binding)
     }
 
     btn_project_add.insertAdjacentElement('beforebegin', project_tab)
+
+
+    const btn_remove_project = document.createElement('button')
+    btn_remove_project.innerHTML = '&times;'
+    btn_remove_project.classList.add('btn_remove_project')
+    project_tab.append(btn_remove_project)
+    btn_remove_project.onclick = () => remove_project(project_tab)
     
+
     const new_project = individual_project(name)
     projects.add_Project(new_project)
-    
-    console.log(projects.show_projects())
     
 }
 
@@ -265,15 +265,15 @@ function btn_new_project(){
 
     project_name = prompt('Project Name: ')
     if(project_name == '' || project_name == null){return}
+    
+    const arr_projects_names = projects.show_projects().map(project => project.name())
+    if(arr_projects_names.includes(project_name)){alert('Project name must be unique'); return}  
 
     createProject_DOM(project_name)
+
 }
 
 
-createProject_DOM('Default')
-createProject_DOM('Web_Dev')
-display_task_DOM('Coding', 'Type of events in eventlistener, DOM style object', '2022-05-22', 5)
-display_task_DOM('Grocery Run', 'Salmon, Kale, Greek yogurt, Okra', '2022-05-22', 4)
 
 function get_task(task_name){
 
@@ -283,13 +283,21 @@ function get_task(task_name){
 
     arr_tasks_name = project.show_tasks().map(el => el.getName())
     task_id = arr_tasks_name.indexOf(task_name)
-    console.log(task_id)
+
     task = project.show_tasks()[task_id]
 
     return task
 }
 
+createProject_DOM('Default')
+createProject_DOM('Web_Dev')
+display_task_DOM('Coding', 'Type of events in eventlistener, DOM style object', '2022-05-22', 5)
+display_task_DOM('Grocery Run', 'Salmon, Kale, Greek yogurt, Okra', '2022-05-22', 4)
 
+task_1 = task_factory('Coding', 'Type of events in eventlistener, DOM style object', '2022-05-22', 5)
+task_2 = task_factory('Grocery Run', 'Salmon, Kale, Greek yogurt, Okra', '2022-05-22', 4)
+append_task_to_project(task_1)
+append_task_to_project(task_2)
 ////////////////////////////////////////////////
 
 const btn_addTask = document.querySelector('[data-target]')
@@ -302,7 +310,7 @@ const editTask_container = document.querySelector('.editTask_container')
 
 btn_addTask.addEventListener('click', ()=>{
  
-    openForm(addTask_container)
+    form_add_task(addTask_container)
 
 })
 
@@ -319,7 +327,7 @@ btn_close_editTask.addEventListener('click', ()=>{
 
 
 
-function openForm(addTask_container){
+function form_add_task(addTask_container){
 
     addTask_container.classList.add('active')
 
@@ -335,11 +343,28 @@ function closeForm(){
 }
 
 
-function clear_lists(){
+function clear_task_list(){
 
     const lists = document.querySelector('.main')
     lists.innerHTML = ''
 }
 
+function remove_project(project_tab){
+
+    project_name = project_tab.dataset.key
+    projects.remove_Project(project_name)
+
+    project_tab.remove()
+    
+    
+}
 
 
+function css_add_border(binding){
+
+    const project_buttons = Array.from(document.querySelectorAll('.project'))
+    project_buttons.forEach(button => button.classList.remove('green_border') )
+
+    
+    binding.classList.add('green_border')
+}
