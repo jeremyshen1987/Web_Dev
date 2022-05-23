@@ -1,5 +1,7 @@
 * {
     box-sizing: border-box;
+    --dark-green: #044343;
+    --light-green: #82A284;
 }
 
 body {
@@ -26,7 +28,7 @@ body {
 }
 
 .sidebar {
-    background-color: #044343;
+    background-color: var(--dark-green);
     font-size: 2rem;
 }
 
@@ -90,7 +92,6 @@ body {
 
     font-size: 2rem;
     font-weight: bold;
-    cursor: pointer;
     border: none;
     background: none;
 }
@@ -124,6 +125,12 @@ input, textarea {
 
 button.newTask, .edit_task {
     align-self: flex-end;
+
+    background-color: #3882f6;
+    border: 2px solid white;
+    border-radius: 12px;
+    color: #EEEEEE;
+    padding: 10px;
 }
 
 .wrapper {
@@ -175,7 +182,7 @@ hr {
     font-size: 1.8rem;
 
     margin: 10px 5px;
-    background: #82A284;
+    background: var(--light-green);
     border-radius: 5px;
 }
 
@@ -184,9 +191,18 @@ hr {
     opacity: .4;
 }
 
-button[data-target="#addTask_container"] {
-    background-color: #03506F;
+.edit_button {
+    color: #FF8E00;
+    background: none;
+    border: none;
+    font-size: 2rem;
+}
 
+
+button[data-target="#addTask_container"] {
+
+    background-color: #03506F;
+    cursor: pointer;
     position: absolute;
     right: calc(100vw / 20);
     bottom: calc((100vh / 7.3 * .3) + 35px);
@@ -198,6 +214,15 @@ button[data-target="#addTask_container"] {
     font-size: 3rem;
 }
 
+button[data-target="#addTask_container"]:hover {
+
+    background-color: #1572A1;
+    transition: .7s ease-in-out;
+}
+
+.btn_project_add, .project, .newTask, .close_button, .edit_button{
+    cursor: pointer;
+}
 
 /* #overlay {
 

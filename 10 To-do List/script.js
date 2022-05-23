@@ -1,5 +1,5 @@
 
-const toDo = (name, description, due_date, priority) => {
+const task_factory = (name, description, due_date, priority) => {
 
     const getName = ()=> name;
     const getDesc = ()=> description;
@@ -27,9 +27,16 @@ function submit_newTask(){
     const due_date = document.querySelector('#dueDate').value
     const priority = document.querySelector('#priority').value
 
+    const unique_task_name = get_task(name)
+
+    if(unique_task_name){
+        alert('Task name must be unique')
+        return
+    }
+
     display_task_DOM(name, description, due_date, priority)
 
-    const newTask = toDo(name, description, due_date, priority)
+    const newTask = task_factory(name, description, due_date, priority)
     append_task_to_project(newTask)
 
 
@@ -108,7 +115,7 @@ function display_task_DOM(name, description, due_date, priority){
     edit_btn = document.createElement('button')
     edit_btn.classList.add('edit_button')
     edit_btn.style.color = '#519872'
-    edit_btn.innerHTML = '&#8801;'
+    edit_btn.innerHTML = '&equiv;'
     edit_btn.onclick = (e)=> editTask(e)
 
     del_btn = document.createElement('button')
@@ -265,7 +272,8 @@ function btn_new_project(){
 
 createProject_DOM('Default')
 createProject_DOM('Web_Dev')
-
+display_task_DOM('Coding', 'Type of events in eventlistener, DOM style object', '2022-05-22', 5)
+display_task_DOM('Grocery Run', 'Salmon, Kale, Greek yogurt, Okra', '2022-05-22', 4)
 
 function get_task(task_name){
 
@@ -316,12 +324,8 @@ function openForm(addTask_container){
     addTask_container.classList.add('active')
 
     const btn_newTask = document.querySelector('.newTask')
-
     btn_newTask.onclick = ()=> submit_newTask()
     
-    // btn_newTask.addEventListener('click', () => submit_newTask(), {once:true})
-
-
 }
 
 function closeForm(){
@@ -332,11 +336,10 @@ function closeForm(){
 
 
 function clear_lists(){
+
     const lists = document.querySelector('.main')
     lists.innerHTML = ''
 }
-
-///////////////////////////////////////////////////
 
 
 
