@@ -42,7 +42,7 @@ function submit_newTask(){
 
 }
 
-function submit_editTask(){
+function submit_editTask(task_item, edit_taskName, edit_Description, edit_dueDate, edit_priority){
 
     task_item.setName(edit_taskName.value)
     task_item.setDesc(edit_Description.value)
@@ -58,16 +58,16 @@ function submit_editTask(){
 
 function editTask(e){
     
-    button = e.target
-    task_name = button.parentElement.firstChild.textContent
-    task_item = get_task(task_name)
+    const button = e.target
+    const task_name = button.parentElement.firstChild.textContent
+    const task_item = get_task(task_name)
 
     editTask_container.classList.add('active')
 
-    edit_taskName = document.querySelector('#edit_taskName') 
-    edit_Description = document.querySelector('#edit_Description')
-    edit_dueDate = document.querySelector('#edit_dueDate')
-    edit_priority = document.querySelector('#edit_priority')
+    const edit_taskName = document.querySelector('#edit_taskName') 
+    const edit_Description = document.querySelector('#edit_Description')
+    const edit_dueDate = document.querySelector('#edit_dueDate')
+    const edit_priority = document.querySelector('#edit_priority')
 
 
     edit_taskName.value = task_item.getName()
@@ -105,19 +105,19 @@ function display_task_DOM(name, description, due_date, priority){
     task_name.classList.add('list_header')
     task_description.classList.add('list_body')
 
-    edit_btn = document.createElement('button')
+    const edit_btn = document.createElement('button')
     edit_btn.classList.add('edit_button')
     edit_btn.style.color = '#519872'
     edit_btn.innerHTML = '&equiv;'
     edit_btn.onclick = (e)=> editTask(e)
 
-    del_btn = document.createElement('button')
+    const del_btn = document.createElement('button')
     del_btn.classList.add('close_button')
     del_btn.style.color = '#EC994B'
     del_btn.innerHTML = '&times;'
     del_btn.onclick = function(){
   
-        title = this.parentElement.firstChild.textContent
+        const title = this.parentElement.firstChild.textContent
 
         const all_projects = projects.show_projects()
 
@@ -263,7 +263,7 @@ function createProject_DOM(name){
 
 function btn_new_project(){
 
-    project_name = prompt('Project Name: ')
+    let project_name = prompt('Project Name: ')
     if(project_name == '' || project_name == null){return}
     
     const arr_projects_names = projects.show_projects().map(project => project.name())
@@ -277,14 +277,14 @@ function btn_new_project(){
 
 function get_task(task_name){
 
-    arr_projects_name = projects.show_projects().map(el => el.name())
-    project_id = arr_projects_name.indexOf(projects.current_project())
-    project = projects.show_projects()[project_id]
+    const arr_projects_name = projects.show_projects().map(el => el.name())
+    const project_id = arr_projects_name.indexOf(projects.current_project())
+    const project = projects.show_projects()[project_id]
 
-    arr_tasks_name = project.show_tasks().map(el => el.getName())
-    task_id = arr_tasks_name.indexOf(task_name)
+    const arr_tasks_name = project.show_tasks().map(el => el.getName())
+    const task_id = arr_tasks_name.indexOf(task_name)
 
-    task = project.show_tasks()[task_id]
+    const task = project.show_tasks()[task_id]
 
     return task
 }
@@ -294,8 +294,8 @@ createProject_DOM('Web_Dev')
 display_task_DOM('Coding', 'Type of events in eventlistener, DOM style object', '2022-05-22', 5)
 display_task_DOM('Grocery Run', 'Salmon, Kale, Greek yogurt, Okra', '2022-05-22', 4)
 
-task_1 = task_factory('Coding', 'Type of events in eventlistener, DOM style object', '2022-05-22', 5)
-task_2 = task_factory('Grocery Run', 'Salmon, Kale, Greek yogurt, Okra', '2022-05-22', 4)
+const task_1 = task_factory('Coding', 'Type of events in eventlistener, DOM style object', '2022-05-22', 5)
+const task_2 = task_factory('Grocery Run', 'Salmon, Kale, Greek yogurt, Okra', '2022-05-22', 4)
 append_task_to_project(task_1)
 append_task_to_project(task_2)
 ////////////////////////////////////////////////
@@ -351,7 +351,7 @@ function clear_task_list(){
 
 function remove_project(project_tab){
 
-    project_name = project_tab.dataset.key
+    const project_name = project_tab.dataset.key
     projects.remove_Project(project_name)
 
     project_tab.remove()
@@ -362,7 +362,7 @@ function remove_project(project_tab){
 
 function css_add_border(binding){
 
-    const project_buttons = Array.from(document.querySelectorAll('.project'))
+    const project_buttons = [...document.querySelectorAll('.project')]
     project_buttons.forEach(button => button.classList.remove('green_border') )
 
     
