@@ -9,23 +9,60 @@
 <body>
 
     <img src="#">
+
+    <div>
+
+        <p>Search could took a few seconds to complete due to latency from server side</p>
+        <label for="gif"><input type="text" id="gif" minlength="3" maxlength="15" placeholder="search something..." ></label>
+        
+        <button onclick="gif_search()">Search</button>
+        <p class="error"></p>
+    </div>
+
     <script>
 
+        function gif_search(){
+            const search_words = document.querySelector('input#gif').value || 'red panda'
+            console.log(search_words)
+            const error_msg = document.querySelector('p.error')
 
-        const img = document.querySelector('img');
-        fetch('https://api.giphy.com/v1/gifs/translate?api_key=85WbD0GFHhaXml4vTsXhDK6urxPaYkrc&s=fox', {mode: 'cors'})
+            const img = document.querySelector('img');
+            fetch(`https://api.giphy.com/v1/gifs/translate?api_key=85WbD0GFHhaXml4vTsXhDK6urxPaYkrc&s=${search_words}`, {mode: 'cors'})
             .then(function(response) {
                 return response.json()
             })
             .then(function(response){
-                console.log(response.data.images.original.url)
+                
                 img.src = response.data.images.original.url
+                console.log(img.src)
             })
-            .catch(e => console.log(e));
+            .catch(e => {error_msg.textContent = e});
 
+
+        }
+
+        gif_search()
 
 
     </script>
+
+    <style>
+        
+        body {
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 50px;
+
+        }
+
+        img {
+            max-width: 800px;
+        }
+
+
+    </style>
     
 </body>
 </html>
