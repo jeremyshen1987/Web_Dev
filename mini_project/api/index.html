@@ -11,18 +11,17 @@
     <img src="#">
     <script>
 
-        // please prepend '85' to the AP&*I key (it's a free key anyway)
-
 
         const img = document.querySelector('img');
-        fetch('https://api.giphy.com/v1/gifs/translate?api_key=WbD0GFHhaXml4vTsXhDK6urxPaYkrc&s=fox', {mode: 'cors'})
-         .then(function(response) {
-            return response.json()
-        })
-        .then(function(response){
-            console.log(response.data.images.original.url)
-            img.src = response.data.images.original.url
-        });
+        fetch('https://api.giphy.com/v1/gifs/translate?api_key=85WbD0GFHhaXml4vTsXhDK6urxPaYkrc&s=fox', {mode: 'cors'})
+            .then(function(response) {
+                return response.json()
+            })
+            .then(function(response){
+                console.log(response.data.images.original.url)
+                img.src = response.data.images.original.url
+            })
+            .catch(e => console.log(e));
 
 
 
