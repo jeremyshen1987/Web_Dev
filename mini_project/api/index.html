@@ -12,7 +12,7 @@
 
     <div>
 
-        <p>Search could took a few seconds to complete due to latency from server side</p>
+        <p>Search may take up to 20 seconds to complete due to latency from server side</p>
         <label for="gif"><input type="text" id="gif" minlength="3" maxlength="15" placeholder="search something..." ></label>
         
         <button onclick="gif_search()">Search</button>
@@ -21,22 +21,28 @@
 
     <script>
 
-        function gif_search(){
-            const search_words = document.querySelector('input#gif').value || 'red panda'
+        //api key is exposed since it's a free key. At worst I just have to apply for a new one.
+        
+
+        async function gif_search(){
+
+            try {
+                const search_words = document.querySelector('input#gif').value || 'red panda'
             console.log(search_words)
             const error_msg = document.querySelector('p.error')
 
             const img = document.querySelector('img');
-            fetch(`https://api.giphy.com/v1/gifs/translate?api_key=85WbD0GFHhaXml4vTsXhDK6urxPaYkrc&s=${search_words}`, {mode: 'cors'})
-            .then(function(response) {
-                return response.json()
-            })
-            .then(function(response){
-                
-                img.src = response.data.images.original.url
-                console.log(img.src)
-            })
-            .catch(e => {error_msg.textContent = e});
+
+            const response = await fetch(`https://api.giphy.com/v1/gifs/translate?api_key=85WbD0GFHhaXml4vTsXhDK6urxPaYkrc&s=${search_words}`, {mode: 'cors'})
+            const response_json = await response.json()
+
+            img.src = response_json.data.images.original.url
+            }
+
+            catch(err) {
+                error_msg.textContent = err
+            }
+
 
 
         }
