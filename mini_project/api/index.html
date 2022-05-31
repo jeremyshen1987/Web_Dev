@@ -28,15 +28,16 @@
 
             try {
                 const search_words = document.querySelector('input#gif').value || 'red panda'
-            console.log(search_words)
-            const error_msg = document.querySelector('p.error')
+                console.log(search_words)
+                
+                const error_msg = document.querySelector('p.error')
 
-            const img = document.querySelector('img');
+                const img = document.querySelector('img');
 
-            const response = await fetch(`https://api.giphy.com/v1/gifs/translate?api_key=85WbD0GFHhaXml4vTsXhDK6urxPaYkrc&s=${search_words}`, {mode: 'cors'})
-            const response_json = await response.json()
+                const response = await fetch(`https://api.giphy.com/v1/gifs/translate?api_key=85WbD0GFHhaXml4vTsXhDK6urxPaYkrc&s=${search_words}`, {mode: 'cors'})
+                const response_json = await response.json()
 
-            img.src = response_json.data.images.original.url
+                img.src = response_json.data.images.original.url
             }
 
             catch(err) {
