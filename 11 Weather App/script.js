@@ -1,6 +1,6 @@
-async function getCoordinate(){
+async function getCoordinate(input){
 
-    const input = document.querySelector('input#cityName').value
+    input ||= document.querySelector('input#cityName').value
 
     const response = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${input}&limit=5&appid=af974fea2bef8843a98dfed25ae51ac3`)
     const response_json = await response.json()
@@ -92,14 +92,14 @@ async function getWeather(cityLatitude, cityLongitude){
         hour: 'numeric', 
         minute: 'numeric'
     })
-    
+    // Asia/Shanghai
     const dateTimeObj = formatter.formatToParts(new Date())
 
     const weekday = dateTimeObj[0].value
     const localDate = `${dateTimeObj[2].value} ${dateTimeObj[4].value}`
     const localTime = `${dateTimeObj[6].value}:${dateTimeObj[8].value} ${dateTimeObj[10].value} `
 
-
+    forecast.timeZone = timeZone
     forecast.currentCondition = currentCondition
     forecast.iconCurrent = iconCurrent
     forecast.tempNow = tempNow
@@ -120,26 +120,49 @@ async function getWeather(cityLatitude, cityLongitude){
     forecast.date = `${weekday}, ${localDate}`
     forecast.currentTime = localTime
 
+    console.log(forecast)
     return forecast
 
 }
 
 
-(function listener(){
+function futureDatTime(timeZone){
 
-    const searchBtn = document.querySelector('#cityName')
-
-    searchBtn.addEventListener('keydown',(e) => {
-       
-        if(e.key == 'Enter'){getCoordinate()}
-
-    })
-})()
+    let DateObj = {}
+    DateObj.weekday = []
+    DateObj.monthDay = []
+  
+    const today = new Date()
+  
+    for(let i = 0; i < 7; i++){
+      
+  
+      let weekday = today.toLocaleString('en-US', {
+  
+        timeZone: `${timeZone}`,
+        weekday: 'short'
+      })
+    
+      let monthDay = today.toLocaleString('en-US', {
+    
+        timeZone: 'Asia/Shanghai',
+        month: "short",
+        day: "numeric",
+      })
+  
+      DateObj.weekday.push(weekday)
+      DateObj.monthDay.push(monthDay)
+  
+      today.setDate(today.getDate() + 1)
+    }
+  
+    return DateObj
+  
+}
 
 
 function createDOM(cityAndCountry, forecast){
 
-    const container = document.querySelector('.container')
     const title = document.querySelector('.title')
     const date = document.querySelector('.date')
     const temp = document.querySelector('.temp')
@@ -169,18 +192,54 @@ function createDOM(cityAndCountry, forecast){
     visibility.textContent = `Visibility: ${forecast.visibility / 1000} km`
 
 
+    // forecast elements:
+
+    const futureDate = futureDatTime(forecast.timeZone)
+
+    const forecast_weekday = document.querySelectorAll('.forecast_weekday')
+    forecast_weekday.forEach((item, idx) => {
+        item.textContent = futureDate.weekday[idx]
+    })
+
+    const forecast_date = document.querySelectorAll('.forecast_date')
+    forecast_date.forEach((item, idx) => {
+        item.textContent = futureDate.monthDay[idx]
+    })
+
+    const forecast_icon = document.querySelectorAll('.forecast_icon')
+    forecast_icon.forEach((icon, idx) => {
+        icon.src = `./icons/${forecast.futureDaysIcon[idx]}.svg`
+    })
+
+    
+    const forecast_tempMax = document.querySelectorAll('.tempMax')
+    forecast_tempMax.forEach((tempMax, idx) => {
+        tempMax.textContent = forecast.futureDaysMax[idx]
+    })
+
+    const forecast_tempMin = document.querySelectorAll('.tempMin')
+    forecast_tempMin.forEach((tempMin, idx) => {
+        tempMin.textContent = forecast.futureDaysMin[idx]
+    })
+
+    const forecast_condition = document.querySelectorAll('.forecast_condition')
+    forecast_condition.forEach((condition, idx) => {
+        condition.textContent = forecast.futureDaysDescription[idx]
+    })
+
+
 
 }
 
+(function listener(){
 
+    const searchBtn = document.querySelector('#cityName')
 
-// const formatter = new Intl.DateTimeFormat('en-US', {
-//     timeZone: "Asia/Shanghai",
-//     weekday: 'long',
-//     month: "long",
-//     day: "numeric",
-//     hour: 'numeric', 
-//     minute: 'numeric'
-// })
+    searchBtn.addEventListener('keydown',(e) => {
+       
+        if(e.key == 'Enter'){getCoordinate()}
 
-// formatter.formatToParts(new Date())
+    })
+})()
+
+getCoordinate('chongqing')
