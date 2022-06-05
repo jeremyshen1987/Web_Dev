@@ -1,0 +1,79 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+div.searchBar {
+    align-self: center;
+    margin: 20px auto 100px;
+}
+
+div.container {
+
+    width: 50vw;
+    height: 360px;
+
+    margin-top: 50px;
+    margin: auto;
+    border: gold 2px solid;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr 1fr 3.5fr;
+}
+
+div.header, div.currentCondition, div.weatherDetailLeft, div.weatherDetailRight {
+    padding: 15px;
+}
+
+div.header {
+
+    display: flex;
+    align-items: center;
+    grid-column: 1/-1;
+    font-size: 2rem;
+}
+
+span.date {
+    margin-left: auto;
+}
+
+div.tempBox {
+    grid-column: 1;
+    grid-row: 2/-1;
+    border: lightslategray 1px solid;
+    font-size: 2rem;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+img.imgCondition {
+    width: 50%;
+}
+
+div.currentCondition {
+    grid-column: 2/-1;
+    border: black 1px solid;
+    font-size: 1.5rem;
+}
+
+div.weatherDetailLeft {
+    grid-row: 3/-1;
+    border: lightseagreen 1px solid;
+}
+
+div.weatherDetailRight {
+    grid-row: 3/-1;
+}
+
+
+p {
+    text-align: center;
+    font-size: 1.3rem;
+}

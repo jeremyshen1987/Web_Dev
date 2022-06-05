@@ -10,10 +10,41 @@
 </head>
 <body>
 
-    <label for="cityName">Enter a city name: <input type="text" id="cityName" placeholder="London"></label>
-    <button type="button" data-key="search" onclick="getCoordinate()">Search</button>
+    <div class="searchBar">
+        <label for="cityName">Enter a city name: <input type="text" id="cityName" placeholder="London"></label>
+        <button type="button" data-key="search" onclick="getCoordinate()">Search</button>
+    </div>
 
-    <div class="container"></div>
+
+    <div class="container">
+
+        <div class="header">
+            <span class="title">Calgary</span>
+            <span class="date">Thursday</span>
+        </div>
+
+        <div class="currentCondition">
+            Broken clouds
+        </div>
+
+        <div class="tempBox">
+            <img src="" class="imgCondition"> 
+            <div class="temp">24 &#8451;</div>
+        </div>
+
+        <div class="weatherDetailLeft">
+            <p class="uv">uv: 7</p>
+            <p class="humidity">humidity</p>
+            <p class="pressure">pressure: </p>
+        </div>
+
+        <div class="weatherDetailRight">
+            <p class="feels_like">Wind Chill</p>
+            <p class="wind">wind</p>
+            <p class="visibility">visibility</p>
+        </div>
+
+    </div>
 
     
 </body>
