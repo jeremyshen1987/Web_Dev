@@ -1,12 +1,7 @@
 * {
     box-sizing: border-box;
+    --light-brown: #A0937D;
 }
-
- /* body {
-
-    height: 100vh;
-    width: 100vw;
-}   */
 
 div.searchBar {
     display: flex;
@@ -22,9 +17,7 @@ div.container {
 
     width: 60vw;
     height: 360px;
-
     margin: 100px auto 50px;
-    border: gold 2px solid;
 
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -41,6 +34,7 @@ div.header {
     align-items: center;
     grid-column: 1/-1;
     font-size: 2rem;
+    background: #F0ECE3;
 }
 
 span.date {
@@ -50,7 +44,6 @@ span.date {
 div.tempBox {
     grid-column: 1;
     grid-row: 2/-1;
-    border: lightslategray 1px solid;
     font-size: 2rem;
     
     display: flex;
@@ -64,13 +57,12 @@ img.imgCondition {
 
 div.currentCondition {
     grid-column: 2/-1;
-    border: black 1px solid;
     font-size: 1.5rem;
+    padding: 15px 30px;
 }
 
 div.weatherDetailLeft {
     grid-row: 3/-1;
-    border: lightseagreen 1px solid;
 }
 
 div.weatherDetailRight {
@@ -85,21 +77,46 @@ p {
 
 div.forecast_container {
     width: 60vw;
-    height: 300px;
+    height: 270px;
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     margin: auto;
-    border: black 1px solid;
 }
 
 div.forecast_cell {
-    border: lightseagreen 1px solid;
-
+    border: lightseagreen 1px dotted;
+    border-left: none;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-p.forecast_date, p.tempMax, p.tempMin, p.forecast_condition{
+p.forecast_date, p.tempMax, p.tempMin, p.forecast_condition {
     margin: 5px auto;
+}
+
+p.forecast_weekday {
+    margin: 10px auto 0;
+}
+
+p.forecast_icon {
+    margin: 5px auto 10px;
+}
+
+p.forecast_condition {
+    margin-top: 18px;
+}
+
+div.today {
+    border: lightseagreen 2px solid;;
+}
+
+
+
+div.container, div.forecast_container {
+    min-width: 600px
+}
+
+div.container, div.tempBox, div.currentCondition, div.weatherDetailLeft,div.weatherDetailRight {
+    border: var(--light-brown) 1px solid;
 }

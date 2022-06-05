@@ -145,7 +145,7 @@ function futureDatTime(timeZone){
     
       let monthDay = today.toLocaleString('en-US', {
     
-        timeZone: 'Asia/Shanghai',
+        timeZone: `${timeZone}`,
         month: "short",
         day: "numeric",
       })
@@ -180,14 +180,14 @@ function createDOM(cityAndCountry, forecast){
     title.textContent = cityAndCountry
     date.textContent = `${forecast.currentTime} ${forecast.date}`
 
-    temp.textContent = `${forecast.tempNow} \u2103`
-    currentCondition.textContent = `Condition: ${forecast.currentCondition}`
+    temp.textContent = `${forecast.tempNow}\u2103`
+    currentCondition.textContent = `Condition: ${capitalize(forecast.currentCondition)}`
     imgCondition.src = `./icons/${forecast.iconCurrent}.svg`
 
     uv.textContent = `UV Index: ${forecast.uvIndex}`
     humidity.textContent = `Humidity: ${forecast.humidity}`
     pressure.textContent = `Pressure: ${forecast.pressure} hPa`
-    feels_like.textContent = `Feels like: ${forecast.feels_like} \u2103`
+    feels_like.textContent = `Feels like: ${forecast.feels_like}\u2103`
     wind.textContent = `Wind Speed: ${forecast.wind} m/s`
     visibility.textContent = `Visibility: ${forecast.visibility / 1000} km`
 
@@ -214,21 +214,25 @@ function createDOM(cityAndCountry, forecast){
     
     const forecast_tempMax = document.querySelectorAll('.tempMax')
     forecast_tempMax.forEach((tempMax, idx) => {
-        tempMax.textContent = forecast.futureDaysMax[idx]
+        tempMax.textContent = `${forecast.futureDaysMax[idx]}\u2103`
     })
 
     const forecast_tempMin = document.querySelectorAll('.tempMin')
     forecast_tempMin.forEach((tempMin, idx) => {
-        tempMin.textContent = forecast.futureDaysMin[idx]
+        tempMin.textContent = `${forecast.futureDaysMin[idx]}\u2103`
     })
 
     const forecast_condition = document.querySelectorAll('.forecast_condition')
     forecast_condition.forEach((condition, idx) => {
-        condition.textContent = forecast.futureDaysDescription[idx]
+        condition.textContent = capitalize(forecast.futureDaysDescription[idx])
     })
 
 
 
+}
+
+function capitalize(string){
+    return string[0].toUpperCase() + string.slice(1)
 }
 
 (function listener(){
