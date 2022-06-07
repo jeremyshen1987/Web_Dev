@@ -45,9 +45,7 @@ async function getCoordinate(input){
 
     const forecast = await getWeather(cityLatitude, cityLongitude) 
 
-    createDOM(cityAndCountry, forecast)
-
-    
+    DOMExcludeTemp(cityAndCountry, forecast)
 
 }
 
@@ -65,8 +63,6 @@ async function getWeather(cityLatitude, cityLongitude){
     const iconCurrent = response_json.current.weather[0].icon
 
     const tempNow = Math.round(response_json.daily[0].temp.day) 
-    const tempMin = Math.round(response_json.daily[0].temp.min)
-    const tempMax = Math.round(response_json.daily[0].temp.max)
     const feels_like = Math.round(response_json.daily[0].feels_like.day)
 
     const humidity = response_json.daily[0].humidity
@@ -92,7 +88,7 @@ async function getWeather(cityLatitude, cityLongitude){
         hour: 'numeric', 
         minute: 'numeric'
     })
-    // Asia/Shanghai
+
     const dateTimeObj = formatter.formatToParts(new Date())
 
     const weekday = dateTimeObj[0].value
@@ -102,25 +98,24 @@ async function getWeather(cityLatitude, cityLongitude){
     forecast.timeZone = timeZone
     forecast.currentCondition = currentCondition
     forecast.iconCurrent = iconCurrent
-    forecast.tempNow = tempNow
-    forecast.tempMin = tempMin
-    forecast.tempMax = tempMax
-    forecast.feels_like = feels_like
+    forecast.tempNow = `${tempNow}\u2103`
     forecast.humidity = humidity
     forecast.uvIndex = uvIndex
     forecast.pressure = pressure
     forecast.visibility = visibility
     forecast.wind = windSpeed
 
-    forecast.futureDaysMin = futureDaysMin
-    forecast.futureDaysMax = futureDaysMax
     forecast.futureDaysDescription = futureDaysDescription
     forecast.futureDaysIcon = futureDaysIcon
 
     forecast.date = `${weekday}, ${localDate}`
     forecast.currentTime = localTime
 
-    console.log(forecast)
+    dataStore.accessTemp().tempNow = tempNow
+    dataStore.accessTemp().futureDaysMin = futureDaysMin
+    dataStore.accessTemp().futureDaysMax = futureDaysMax
+    dataStore.accessTemp().feels_like = feels_like
+
     return forecast
 
 }
@@ -161,11 +156,11 @@ function futureDatTime(timeZone){
 }
 
 
-function createDOM(cityAndCountry, forecast){
+function DOMExcludeTemp(cityAndCountry, forecast){
 
     const title = document.querySelector('.title')
     const date = document.querySelector('.date')
-    const temp = document.querySelector('.temp')
+    
     const currentCondition = document.querySelector('.currentCondition')
     const imgCondition = document.querySelector('.imgCondition')
 
@@ -173,21 +168,20 @@ function createDOM(cityAndCountry, forecast){
     const uv = document.querySelector('.uv')
     const humidity = document.querySelector('.humidity')
     const pressure = document.querySelector('.pressure')
-    const feels_like = document.querySelector('.feels_like')
+    
     const wind = document.querySelector('.wind')
     const visibility = document.querySelector('.visibility')
 
     title.textContent = cityAndCountry
     date.textContent = `${forecast.currentTime} ${forecast.date}`
 
-    temp.textContent = `${forecast.tempNow}\u2103`
+    
     currentCondition.textContent = `Condition: ${capitalize(forecast.currentCondition)}`
     imgCondition.src = `./icons/${forecast.iconCurrent}.svg`
 
     uv.textContent = `UV Index: ${forecast.uvIndex}`
-    humidity.textContent = `Humidity: ${forecast.humidity}`
+    humidity.textContent = `Humidity: ${forecast.humidity}%`
     pressure.textContent = `Pressure: ${forecast.pressure} hPa`
-    feels_like.textContent = `Feels like: ${forecast.feels_like}\u2103`
     wind.textContent = `Wind Speed: ${forecast.wind} m/s`
     visibility.textContent = `Visibility: ${forecast.visibility / 1000} km`
 
@@ -211,24 +205,83 @@ function createDOM(cityAndCountry, forecast){
         icon.src = `./icons/${forecast.futureDaysIcon[idx]}.svg`
     })
 
-    
-    const forecast_tempMax = document.querySelectorAll('.tempMax')
-    forecast_tempMax.forEach((tempMax, idx) => {
-        tempMax.textContent = `${forecast.futureDaysMax[idx]}\u2103`
-    })
-
-    const forecast_tempMin = document.querySelectorAll('.tempMin')
-    forecast_tempMin.forEach((tempMin, idx) => {
-        tempMin.textContent = `${forecast.futureDaysMin[idx]}\u2103`
-    })
-
     const forecast_condition = document.querySelectorAll('.forecast_condition')
     forecast_condition.forEach((condition, idx) => {
         condition.textContent = capitalize(forecast.futureDaysDescription[idx])
     })
 
+    DOM_Temperature()
+}
+
+function DOM_Temperature(){
+    
+    const temperatures = dataStore.accessTemp()
+    let unit = (temperatures.unit == 'c') ? '\u2103' : '\u2109'
+
+    const temp = document.querySelector('.temp')
+    const feels_like = document.querySelector('.feels_like')
+    const forecast_tempMax = document.querySelectorAll('.tempMax')
+    const forecast_tempMin = document.querySelectorAll('.tempMin')
+
+    if(temperatures.unit == 'c'){
+
+        temp.textContent = `${temperatures.tempNow} ${unit}`
+        feels_like.textContent = `Feels like: ${temperatures.feels_like}${unit}`
+
+        forecast_tempMax.forEach((tempMax, idx) => {
+            tempMax.textContent = `${temperatures.futureDaysMax[idx]}${unit}`
+        })
+    
+        forecast_tempMin.forEach((tempMin, idx) => {
+            tempMin.textContent = `${temperatures.futureDaysMin[idx]}${unit}`
+        })
+        
+    }
+    else{
+
+        temp.textContent = `${toFahrenheit(temperatures.tempNow)} ${unit}`
+        feels_like.textContent = `Feels like: ${toFahrenheit(temperatures.feels_like)}${unit}`
+
+        forecast_tempMax.forEach((tempMax, idx) => {
+            tempMax.textContent = `${toFahrenheit(temperatures.futureDaysMax[idx])}${unit}`
+        })
+    
+        forecast_tempMin.forEach((tempMin, idx) => {
+            tempMin.textContent = `${toFahrenheit(temperatures.futureDaysMin[idx])}${unit}`
+        })
+
+    }
+
+}
+
+getCoordinate('hefei')
 
 
+const dataStore = (function (){
+
+    let temperatures = {unit:'c'}
+
+    console.log('datastore start')
+    return{
+        accessTemp: () => {return temperatures},
+    }
+})()
+
+
+function toggle(){
+
+    const data = dataStore.accessTemp()
+    data.unit = (data.unit == 'c') ? 'f' : 'c'
+    DOM_Temperature()
+
+    const unitBtn = document.querySelector('.celsiusFahrenheitConvertion')
+    unitBtn.textContent = (data.unit == 'c') ? '\u2109' : '\u2103'
+
+}
+
+
+function toFahrenheit(c){
+    return Math.round((c * 9 / 5) + 32)
 }
 
 function capitalize(string){
@@ -246,4 +299,5 @@ function capitalize(string){
     })
 })()
 
-getCoordinate('chongqing')
+
+

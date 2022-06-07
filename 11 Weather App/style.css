@@ -6,11 +6,54 @@
 div.searchBar {
     display: flex;
     justify-content: center;
+    width: 60vw;
     margin: 20px auto 100px;
 }
 
-input#cityName {
+button.celsiusFahrenheitConvertion {
+    background: none;
+    border: lightseagreen 2px solid;
+    cursor: pointer;
+    height: 35px;
+    aspect-ratio: 1/1;
+}
+
+img.search {
+    width: 40px;
+    opacity: .3;
+    cursor: pointer;
+}
+
+div.bar {
     flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+button.celsiusFahrenheitConvertion {
+    flex-direction: flex-end;
+    height: 30px;
+    color: lightseagreen ;
+}
+
+input#cityName {
+
+    outline: none;
+    background: none;
+    border: none;
+    border-bottom: 1px solid;
+    width: 25vw;
+    height: 40px;
+    font-size: 2rem;
+    opacity: .5;
+}
+
+input#cityName:focus {
+    opacity: 1;
+}
+
+::placeholder {
+    opacity: .5;
 }
 
 div.container {
@@ -84,7 +127,7 @@ div.forecast_container {
 }
 
 div.forecast_cell {
-    border: lightseagreen 1px dotted;
+    border: lightseagreen 2px dotted;
     border-left: none;
     display: flex;
     flex-direction: column;
