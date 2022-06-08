@@ -1,6 +1,7 @@
 async function getCoordinate(input){
 
     input ||= document.querySelector('input#cityName').value
+    
 
     const response = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${input}&limit=5&appid=af974fea2bef8843a98dfed25ae51ac3`)
     const response_json = await response.json()
@@ -45,7 +46,17 @@ async function getCoordinate(input){
 
     const forecast = await getWeather(cityLatitude, cityLongitude) 
 
+
     DOMExcludeTemp(cityAndCountry, forecast)
+
+
+    //save search to localStorage
+    const lastSearched = dataStore.accessLastSearched()
+    lastSearched.lat = cityLatitude
+    lastSearched.lon = cityLongitude
+    lastSearched.cityAndCountry = cityAndCountry
+
+    dataStore.saveCoordinate()
 
 }
 
@@ -54,8 +65,7 @@ async function getWeather(cityLatitude, cityLongitude){
 
     let forecast = {}
 
-    // https://api.openweathermap.org/data/2.5/onecall? &exclude=hourly,minutely,alerts&units=metric&appid=af974fea2bef8843a98dfed25ae51ac3
-    const response = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${cityLatitude}&lon=${cityLongitude}&exclude=hourly,minutely,alerts&units=metric&appid=af974fea2bef8843a98dfed25ae51ac3`)
+    const response = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${cityLatitude}&lon=${cityLongitude}&exclude=minutely&units=metric&appid=af974fea2bef8843a98dfed25ae51ac3`)
     const response_json = await response.json()
 
 
@@ -179,7 +189,7 @@ function DOMExcludeTemp(cityAndCountry, forecast){
     currentCondition.textContent = `Condition: ${capitalize(forecast.currentCondition)}`
     imgCondition.src = `./icons/${forecast.iconCurrent}.svg`
 
-    uv.textContent = `UV Index: ${forecast.uvIndex}`
+    uv.textContent = `UV index: ${forecast.uvIndex}`
     humidity.textContent = `Humidity: ${forecast.humidity}%`
     pressure.textContent = `Pressure: ${forecast.pressure} hPa`
     wind.textContent = `Wind Speed: ${forecast.wind} m/s`
@@ -254,18 +264,43 @@ function DOM_Temperature(){
 
 }
 
-getCoordinate('hefei')
+
 
 
 const dataStore = (function (){
 
     let temperatures = {unit:'c'}
+    let records = []
+    let lastSearched = {}
 
     console.log('datastore start')
     return{
         accessTemp: () => {return temperatures},
+        accessRecords: () => {return records},
+        accessLastSearched: () => {return lastSearched},
+
+        saveCoordinate: () => {
+            const coordinate = JSON.stringify(lastSearched)
+            localStorage.setItem('lastSearched', coordinate)
+        }
     }
 })()
+
+const LS = (async function (){
+
+    if(localStorage.getItem('lastSearched') == null){
+        getCoordinate('hefei')
+    }
+    else{
+        const coordinate = JSON.parse(localStorage.getItem('lastSearched'))
+        forecast = await getWeather(coordinate.lat, coordinate.lon) 
+        DOMExcludeTemp(coordinate.cityAndCountry, forecast)
+    }
+
+
+})()
+
+
 
 
 function toggle(){
