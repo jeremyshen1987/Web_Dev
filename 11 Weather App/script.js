@@ -1,19 +1,16 @@
-async function getCoordinate(input){
+async function getCoordinate(userInput){
 
-    input ||= document.querySelector('input#cityName').value
+    userInput ||= document.querySelector('input#cityName').value
     
 
-    const response = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${input}&limit=5&appid=af974fea2bef8843a98dfed25ae51ac3`)
+    const response = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${userInput}&limit=5&appid=af974fea2bef8843a98dfed25ae51ac3`)
     const response_json = await response.json()
-
-    console.log(response_json)
-    console.log(response.status)
 
     let cityIndex = undefined
 
     if(response_json.length == 0){
 
-        alert(`No result for: ${input}`)
+        alert(`No result for: ${userInput}`)
         return
     }
 
@@ -25,19 +22,23 @@ async function getCoordinate(input){
 
         const stateAndCountry = response_json.map((city, index) => {return `   ${index} => ${city.name},${city.state},${city.country}`})
 
-        cityIndex = prompt(`select an index: ${stateAndCountry}`)
-        
-        console.log(cityIndex)
 
-        if (parseInt(cityIndex) > response_json.length || parseInt(cityIndex) < 0){
+        while(true){
+
+            cityIndex = prompt(`select an index: ${stateAndCountry}`)
+
+            if (parseInt(cityIndex) < response_json.length && parseInt(cityIndex) >= 0){
     
-            alert('invalid selection! Please search again')
-            return
+                break
+            }
+
+            alert(`invalid selection! Index must within range 0 to ${response_json.length - 1}`)
+
         }
 
     }
 
-    const cityAndCountry = `${response_json[cityIndex].local_names.en}, ${response_json[cityIndex].country}`
+    const cityAndCountry = (response_json[cityIndex].local_names == undefined) ? `${response_json[cityIndex].name}, ${response_json[cityIndex].state}` : `${response_json[cityIndex].local_names.en}, ${response_json[cityIndex].country}`
 
     const cityLatitude = response_json[cityIndex].lat
     const cityLongitude = response_json[cityIndex].lon
@@ -50,14 +51,21 @@ async function getCoordinate(input){
     DOMExcludeTemp(cityAndCountry, forecast)
 
 
-    //save search to localStorage
+    saveSearchResult(cityLatitude, cityLongitude, cityAndCountry)
+
+}
+
+
+function saveSearchResult(cityLatitude, cityLongitude, cityAndCountry){
+
     const lastSearched = dataStore.accessLastSearched()
     lastSearched.lat = cityLatitude
     lastSearched.lon = cityLongitude
     lastSearched.cityAndCountry = cityAndCountry
 
-    dataStore.saveCoordinate()
-
+    dataStore.persist_lastSearch()
+    dataStore.appendLocalStorage(cityAndCountry)
+    
 }
 
 
@@ -67,7 +75,7 @@ async function getWeather(cityLatitude, cityLongitude){
 
     const response = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${cityLatitude}&lon=${cityLongitude}&exclude=minutely&units=metric&appid=af974fea2bef8843a98dfed25ae51ac3`)
     const response_json = await response.json()
-
+    console.log(response_json)
 
     const currentCondition = response_json.current.weather[0].description
     const iconCurrent = response_json.current.weather[0].icon
@@ -264,13 +272,34 @@ function DOM_Temperature(){
 
 }
 
+// const test = {lat: 51.0460954, lon: -114.065465, cityAndCountry: 'Calgary, CA'}
 
+function save_localStorage(obj){
+
+    if(localStorage.getItem('LS_cityNames') == null){
+        const arr_cityNames = []
+        arr_cityNames.push(obj.cityAndCountry)
+
+        localStorage.setItem('LS_cityNames', JSON.stringify(arr_cityNames))
+        
+    }
+    else{
+
+        const arr_cityNames = JSON.parse(localStorage.getItem('LS_cityNames'))
+        arr_cityNames.push(obj.cityAndCountry)
+
+        localStorage.setItem('LS_cityNames', JSON.stringify(arr_cityNames))
+
+    }
+
+    localStorage.setItem(obj.cityAndCountry, JSON.stringify(obj))
+
+}
 
 
 const dataStore = (function (){
 
     let temperatures = {unit:'c'}
-    let records = []
     let lastSearched = {}
 
     console.log('datastore start')
@@ -279,14 +308,26 @@ const dataStore = (function (){
         accessRecords: () => {return records},
         accessLastSearched: () => {return lastSearched},
 
-        saveCoordinate: () => {
+        appendLocalStorage: (cityName) => {
+
+            LS_Cities = JSON.parse(localStorage.getItem('LS_cityNames'))
+
+            if(LS_Cities.includes(cityName)){
+                return
+            }
+
+            LS_Cities.push(cityName)
+            localStorage.setItem('LS_cityNames', JSON.stringify(LS_Cities))
+        },
+
+        persist_lastSearch: () => {
             const coordinate = JSON.stringify(lastSearched)
             localStorage.setItem('lastSearched', coordinate)
         }
     }
 })()
 
-const LS = (async function (){
+const Load_LocalStorage = (async function (){
 
     if(localStorage.getItem('lastSearched') == null){
         getCoordinate('hefei')
@@ -297,10 +338,7 @@ const LS = (async function (){
         DOMExcludeTemp(coordinate.cityAndCountry, forecast)
     }
 
-
 })()
-
-
 
 
 function toggle(){
@@ -323,6 +361,73 @@ function capitalize(string){
     return string[0].toUpperCase() + string.slice(1)
 }
 
+
+function displayHistory(){
+    
+    const searchHistory = JSON.parse(localStorage.getItem('LS_cityNames'))
+
+    const container = document.querySelector('.bar')
+    const history = document.createElement('div')
+    history.classList.add('history')
+    const ul = document.createElement('ul')
+
+    document.body.addEventListener('click', (e) => {
+
+        if(e.target.tagName != 'INPUT' && !e.target.classList.contains('removeLi')){
+            history.style.display = 'none'
+        }
+    })
+
+    searchHistory.forEach(item => {
+
+        const listBox = document.createElement('div')
+        listBox.classList.add('listBox')
+        const li = document.createElement('li')
+        const btn = document.createElement('button')
+
+        li.classList.add('list')
+        li.textContent = item
+        li.onclick = async function loadHistory(){
+            
+            cityName = this.textContent
+            cityObj = JSON.parse(localStorage.getItem(cityName))
+
+            forecast = await getWeather(cityObj.lat, cityObj.lon) 
+            DOMExcludeTemp(cityObj.cityAndCountry, forecast)
+
+            history.style.display = 'none'
+        }
+
+        btn.type = 'button'
+        btn.classList.add('removeLi')
+        btn.textContent = 'Remove'
+
+        btn.onclick = function removeRecord(){
+            
+            const cityName = this.parentElement.firstChild.textContent
+            const LS_Cities = JSON.parse(localStorage.getItem('LS_cityNames'))
+            const index = LS_Cities.indexOf(cityName)
+
+            LS_Cities.splice(index, 1)
+            localStorage.setItem('LS_cityNames', JSON.stringify(LS_Cities))
+
+
+            this.parentElement.remove()
+
+        }
+
+        listBox.append(li)
+        listBox.append(btn)
+        ul.append(listBox)
+    })
+
+    history.append(ul)
+    container.append(history)
+
+}
+
+
+
 (function listener(){
 
     const searchBtn = document.querySelector('#cityName')
@@ -332,7 +437,9 @@ function capitalize(string){
         if(e.key == 'Enter'){getCoordinate()}
 
     })
-})()
 
+    searchBtn.addEventListener('click', displayHistory)
+
+})()
 
 
