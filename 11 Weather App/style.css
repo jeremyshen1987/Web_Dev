@@ -98,11 +98,22 @@ input#cityName:focus {
     opacity: .5;
 }
 
+div.alerts {
+    cursor: pointer;
+    width: 60vw;
+    margin: auto;
+    padding: 15px;
+    text-align: center;
+    font-size: 2rem;
+    color: white;
+    background-color: #B22727;
+}
+
 div.container {
 
     width: 60vw;
     height: 360px;
-    margin: 100px auto 50px;
+    margin: 30px auto 50px;
 
     display: grid;
     grid-template-columns: repeat(3, 1fr);

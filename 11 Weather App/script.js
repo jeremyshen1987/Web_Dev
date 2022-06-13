@@ -77,6 +77,17 @@ async function getWeather(cityLatitude, cityLongitude){
     const response_json = await response.json()
     console.log(response_json)
 
+    if(response_json.alerts !== undefined){
+
+        alertTitle = response_json.alerts.map(title => title.event)
+        alertBody = response_json.alerts.map(body => body.description)
+
+        forecast.alertTitles = `${(alertTitle.reduce((pre, next) => pre + ', ' + next)).toUpperCase()} WARNING`
+        forecast.alertBody = alertBody.reduce((pre, next) => pre + '\n' + next)
+
+        console.log(forecast.alertTitles)
+    }
+    
     const currentCondition = response_json.current.weather[0].description
     const iconCurrent = response_json.current.weather[0].icon
 
@@ -203,6 +214,24 @@ function DOMExcludeTemp(cityAndCountry, forecast){
     wind.textContent = `Wind Speed: ${forecast.wind} m/s`
     visibility.textContent = `Visibility: ${forecast.visibility / 1000} km`
 
+
+    // alerts
+
+    const removeAlert = document.querySelector('.alerts')
+    if(removeAlert !== null){
+        removeAlert.remove()
+    }
+    
+
+    if(forecast.alertTitles !== undefined){
+        const alertDiv = document.createElement('div')
+        alertDiv.classList.add('alerts')
+        alertDiv.textContent = forecast.alertTitles
+        alertDiv.onclick = () => alert(forecast.alertBody)
+
+        const searchBar = document.querySelector('.searchBar')
+        searchBar.insertAdjacentElement('afterend', alertDiv)
+    }
 
     // forecast elements:
 
