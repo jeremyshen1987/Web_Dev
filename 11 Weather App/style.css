@@ -171,8 +171,15 @@ p {
     font-size: 1.3rem;
 }
 
-.slider_main{
+.forecast_main {
+    width: 60vw;
+    height: 40px;
     display: flex;
+    margin: auto;
+}
+
+.slider_main{
+    display: none;
     align-items: center;
 }
 
@@ -197,6 +204,13 @@ div.forecast_container, div.hourly_container {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     margin: auto;
+}
+div.forecast_container {
+    display: grid;
+}
+
+div.hourly_container {
+    display: none;
 }
 
 div.forecast_cell, div.hourly_cell {

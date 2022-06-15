@@ -47,13 +47,8 @@ async function getCoordinate(userInput){
 
     const forecast = await getWeather(cityLatitude, cityLongitude) 
     
-    console.log('a')
-    console.log(forecast)
 
     Object.assign(dataStore.accessForecast(), forecast)
-
-    console.log(dataStore.accessForecast())
-    console.log('b')
 
     DOM_Main(cityAndCountry, forecast)
     DOM_forecastDaily(forecast)
@@ -139,16 +134,20 @@ async function getWeather(cityLatitude, cityLongitude){
     const localDate = `${dateTimeObj[2].value} ${dateTimeObj[4].value}`
     const localTime = `${dateTimeObj[6].value}:${dateTimeObj[8].value} ${dateTimeObj[10].value} `
 
+    forecast.unit = 'c'
     forecast.timeZone = timeZone
     forecast.currentCondition = currentCondition
     forecast.iconCurrent = iconCurrent
-    forecast.tempNow = `${tempNow}\u2103`
+    forecast.tempNow = `${tempNow}`
     forecast.humidity = humidity
     forecast.uvIndex = uvIndex
     forecast.pressure = pressure
     forecast.visibility = visibility
     forecast.wind = windSpeed
 
+    forecast.futureDaysMin = futureDaysMin
+    forecast.futureDaysMax = futureDaysMax
+    forecast.feels_like = feels_like
     forecast.futureDaysDescription = futureDaysDescription
     forecast.futureDaysIcon = futureDaysIcon
 
@@ -156,20 +155,13 @@ async function getWeather(cityLatitude, cityLongitude){
     forecast.hours = epochTime.map((EpochTime) => epochConversion(timeZone, EpochTime).hour)
     forecast.hourlyDate = epochTime.map((EpochTime) => epochConversion(timeZone, EpochTime).monthDay)
     forecast.hourlyIcon = hourlyIcon
-    forecast.hourlyTemp = hourlyTemp
+    forecast.hourlyTemp = hourlyTemp.map((temp) => `${temp} \u2103`)
+    forecast.hourlyTempFahrenheit = hourlyTemp.map((temp) => `${toFahrenheit(temp)} \u2109`)
     forecast.hourlyDescription = hourlyDescription
 
     ///////
     forecast.date = `${weekday}, ${localDate}`
     forecast.currentTime = localTime
-
-    dataStore.accessTemp().tempNow = tempNow
-    dataStore.accessTemp().futureDaysMin = futureDaysMin
-    dataStore.accessTemp().futureDaysMax = futureDaysMax
-    dataStore.accessTemp().feels_like = feels_like
-
-    dataStore.accessTemp().hourlyTemp = hourlyTemp
-
 
     return forecast
 
@@ -309,19 +301,6 @@ function DOM_forecastDaily(forecast){
 
 }
 
-{/* <div class="hourly_container">
-<div class="hourly_cell today">
-    <p class="hourly_hours">1 PM</p>
-    <img src="" alt="" class="hourly_icon">
-    <p class="hourlyTemp">21 C</p>
-    <p class="hourly_condition">Cloudy</p>
-</div> */}
-
-// forecast.hours = epochTime.map((EpochTime) => epochConversion(timeZone, EpochTime).hour)
-// forecast.hourlyDate = epochTime.map((EpochTime) => epochConversion(timeZone, EpochTime).monthDay)
-// forecast.hourlyIcon = hourlyIcon
-// forecast.hourlyTemp = hourlyTemp
-// forecast.hourlyDescription = hourlyDescription
 
 function DOM_sliderControl(){
 
@@ -380,7 +359,7 @@ function DOM_forecastHourly(left = 0, right = 7){
     const hours = forecast.hours.slice(left, right)
     const hourlyDate = forecast.hourlyDate.slice(left, right)
     const hourlyIcon = forecast.hourlyIcon.slice(left, right)
-    const hourlyTemp = forecast.hourlyTemp.slice(left, right)
+    const hourlyTemp = (forecast.unit == 'c') ? forecast.hourlyTemp.slice(left, right) : forecast.hourlyTempFahrenheit.slice(left, right)
     const hourlyDescription = forecast.hourlyDescription.slice(left, right)
 
     const hoursDOM = document.querySelectorAll('.hourly_hours')
@@ -406,13 +385,14 @@ function DOM_forecastHourly(left = 0, right = 7){
 
 }
 
-// let a = [1,2,3,4,5,6,7,8,9,10]
 
 const slider = (function (){
 
     let index = 0
     
     return {
+
+        displayIndex: () => {return index},
 
         displayDefault: function(){
             DOM_forecastHourly(0, 7)
@@ -451,46 +431,59 @@ const slider = (function (){
 
 function DOM_Temperature(){
     
-    const temperatures = dataStore.accessTemp()
-    let unit = (temperatures.unit == 'c') ? '\u2103' : '\u2109'
+    const forecast = dataStore.accessForecast()
+    let unit = (forecast.unit == 'c') ? '\u2103' : '\u2109'
 
     const temp = document.querySelector('.temp')
     const feels_like = document.querySelector('.feels_like')
     const forecast_tempMax = document.querySelectorAll('.tempMax')
     const forecast_tempMin = document.querySelectorAll('.tempMin')
 
-    if(temperatures.unit == 'c'){
+    //hourly
+    const hourlyTemp = document.querySelectorAll('.hourlyTemp')
+    const index = slider.displayIndex()
+    const arrLength = forecast.hourlyTemp.length
 
-        temp.textContent = `${temperatures.tempNow} ${unit}`
-        feels_like.textContent = `Feels like: ${temperatures.feels_like}${unit}`
+
+    if(forecast.unit == 'c'){
+
+        temp.textContent = `${forecast.tempNow} ${unit}`
+        feels_like.textContent = `Feels like: ${forecast.feels_like}${unit}`
 
         forecast_tempMax.forEach((tempMax, idx) => {
-            tempMax.textContent = `${temperatures.futureDaysMax[idx]}${unit}`
+            tempMax.textContent = `${forecast.futureDaysMax[idx]}${unit}`
         })
     
         forecast_tempMin.forEach((tempMin, idx) => {
-            tempMin.textContent = `${temperatures.futureDaysMin[idx]}${unit}`
+            tempMin.textContent = `${forecast.futureDaysMin[idx]}${unit}`
+        })
+
+        hourlyTemp.forEach((temp, idx) => {
+            temp.textContent = ((index + idx) >= arrLength) ? '' : `${forecast.hourlyTemp[index + idx]}`
         })
         
     }
     else{
 
-        temp.textContent = `${toFahrenheit(temperatures.tempNow)} ${unit}`
-        feels_like.textContent = `Feels like: ${toFahrenheit(temperatures.feels_like)}${unit}`
+        temp.textContent = `${toFahrenheit(forecast.tempNow)} ${unit}`
+        feels_like.textContent = `Feels like: ${toFahrenheit(forecast.feels_like)}${unit}`
 
         forecast_tempMax.forEach((tempMax, idx) => {
-            tempMax.textContent = `${toFahrenheit(temperatures.futureDaysMax[idx])}${unit}`
+            tempMax.textContent = `${toFahrenheit(forecast.futureDaysMax[idx])}${unit}`
         })
     
         forecast_tempMin.forEach((tempMin, idx) => {
-            tempMin.textContent = `${toFahrenheit(temperatures.futureDaysMin[idx])}${unit}`
+            tempMin.textContent = `${toFahrenheit(forecast.futureDaysMin[idx])}${unit}`
+        })
+
+        hourlyTemp.forEach((temp, idx) => {
+            temp.textContent = ((index + idx) >= arrLength) ? '' :  `${forecast.hourlyTempFahrenheit[index + idx]}`
         })
 
     }
 
 }
 
-// const test = {lat: 51.0460954, lon: -114.065465, cityAndCountry: 'Calgary, CA'}
 
 function save_localStorage(obj){
 
@@ -518,7 +511,6 @@ function save_localStorage(obj){
 const dataStore = (function (){
 
     let forecastCopy = {}
-    let temperatures = {unit:'c'}
     let lastSearched = {}
 
     console.log('datastore start')
@@ -551,6 +543,7 @@ const Load_LocalStorage = (async function (){
 
     if(localStorage.getItem('lastSearched') == null){
         getCoordinate('hefei')
+        DOM_sliderControl()
     }
     else{
         const coordinate = JSON.parse(localStorage.getItem('lastSearched'))
@@ -560,19 +553,34 @@ const Load_LocalStorage = (async function (){
         DOM_Main(coordinate.cityAndCountry, forecast)
         DOM_forecastDaily(forecast)
         DOM_forecastHourly()
+        DOM_sliderControl()
     }
 
 })()
 
+function toggleDailyHourly(){
 
-function toggle(){
+    const hourlyContainer = document.querySelector('.hourly_container')
+    hourlyContainer.style.display = (window.getComputedStyle(hourlyContainer).display == 'none') ? 'grid' : 'none'
 
-    const data = dataStore.accessTemp()
-    data.unit = (data.unit == 'c') ? 'f' : 'c'
+    const dailyContainer = document.querySelector('.forecast_container')
+    dailyContainer.style.display = (window.getComputedStyle(dailyContainer).display == 'grid') ? 'none' : 'grid'
+
+    const sliderContainer = document.querySelector('.slider_main')
+    sliderContainer.style.display = (window.getComputedStyle(sliderContainer).display == 'none') ? 'flex' : 'none'
+
+    const dailyHourlyBtn = document.querySelector('.dailyHourlyBtn')
+    dailyHourlyBtn.textContent = (dailyHourlyBtn.textContent == 'Daily') ? 'Hourly' : 'Daily'
+}
+
+function toggleCF(){
+
+    const forecase = dataStore.accessForecast()
+    forecase.unit = (forecase.unit == 'c') ? 'f' : 'c'
     DOM_Temperature()
 
     const unitBtn = document.querySelector('.celsiusFahrenheitConvertion')
-    unitBtn.textContent = (data.unit == 'c') ? '\u2109' : '\u2103'
+    unitBtn.textContent = (forecase.unit == 'c') ? '\u2109' : '\u2103'
 
 }
 
@@ -617,8 +625,10 @@ function displayHistory(){
             cityObj = JSON.parse(localStorage.getItem(cityName))
 
             forecast = await getWeather(cityObj.lat, cityObj.lon) 
+            Object.assign(dataStore.accessForecast(), forecast)
             DOM_Main(cityObj.cityAndCountry, forecast)
             DOM_forecastDaily(forecast)
+            DOM_forecastHourly()
 
             history.style.display = 'none'
         }

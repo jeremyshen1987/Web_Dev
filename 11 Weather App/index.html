@@ -19,7 +19,7 @@
         </div>
 
     
-        <button onclick="toggle()" class="celsiusFahrenheitConvertion">&#8457;</button>
+        <button onclick="toggleCF()" class="celsiusFahrenheitConvertion">&#8457;</button>
     </div>
 
     <div class="container">
@@ -51,9 +51,16 @@
         </div>
 
     </div>
+    
+    <div class="forecast_main">
 
-    //////////////////////////////////////////////
-<!-- 
+        <button class="dailyHourlyBtn" onclick="toggleDailyHourly()">Hourly</button>
+    
+        <div class="slider_main">
+        </div>
+        
+    </div>
+
     <div class="forecast_container">
         <div class="forecast_cell today">
             <p class="forecast_weekday"></p>
@@ -118,16 +125,6 @@
             <p class="forecast_condition"></p>
         </div>
 
-    </div> -->
-
-    //////////////////////////////////////////////
-
-    <div class="slider_main">
-        <button onclick="DOM_sliderControl()">Daily</button>
-        <!-- <button class="backward" onclick="() => slider.backward()">&ltrif;</button>
-        <button class="hollowDot">&compfn;</button>
-        <button class="solidDot">&sdot;</button>
-        <button class="forward" onclick="() => slider.forward()">&rtrif;</button> -->
     </div>
 
     <div class="hourly_container">
