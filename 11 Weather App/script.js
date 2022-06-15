@@ -46,10 +46,18 @@ async function getCoordinate(userInput){
     console.log(cityLatitude, cityLongitude)
 
     const forecast = await getWeather(cityLatitude, cityLongitude) 
+    
+    console.log('a')
+    console.log(forecast)
 
+    Object.assign(dataStore.accessForecast(), forecast)
 
-    DOMExcludeTemp(cityAndCountry, forecast)
+    console.log(dataStore.accessForecast())
+    console.log('b')
 
+    DOM_Main(cityAndCountry, forecast)
+    DOM_forecastDaily(forecast)
+    DOM_forecastHourly()
 
     saveSearchResult(cityLatitude, cityLongitude, cityAndCountry)
 
@@ -106,6 +114,13 @@ async function getWeather(cityLatitude, cityLongitude){
     const futureDaysDescription = response_json.daily.map((el) => el.weather[0].description)
     const futureDaysIcon = response_json.daily.map((el) => el.weather[0].icon)
 
+    const epochTime = response_json.hourly.map((el) => el.dt)
+    const hourlyTemp = response_json.hourly.map((el) => Math.round(el.temp))
+    const hourlyHumidity = response_json.hourly.map((el) => Math.round(el.humidity))
+    const hourlyUV = response_json.hourly.map((el) => Math.round(el.uvi))
+    const hourlyPrecipitation = response_json.hourly.map((el) => el.pop)
+    const hourlyDescription = response_json.hourly.map((el) => el.weather[0].description)
+    const hourlyIcon = response_json.hourly.map((el) => el.weather[0].icon)
 
 
     const timeZone = response_json.timezone
@@ -137,6 +152,14 @@ async function getWeather(cityLatitude, cityLongitude){
     forecast.futureDaysDescription = futureDaysDescription
     forecast.futureDaysIcon = futureDaysIcon
 
+    //hourly 
+    forecast.hours = epochTime.map((EpochTime) => epochConversion(timeZone, EpochTime).hour)
+    forecast.hourlyDate = epochTime.map((EpochTime) => epochConversion(timeZone, EpochTime).monthDay)
+    forecast.hourlyIcon = hourlyIcon
+    forecast.hourlyTemp = hourlyTemp
+    forecast.hourlyDescription = hourlyDescription
+
+    ///////
     forecast.date = `${weekday}, ${localDate}`
     forecast.currentTime = localTime
 
@@ -145,10 +168,33 @@ async function getWeather(cityLatitude, cityLongitude){
     dataStore.accessTemp().futureDaysMax = futureDaysMax
     dataStore.accessTemp().feels_like = feels_like
 
+    dataStore.accessTemp().hourlyTemp = hourlyTemp
+
+
     return forecast
 
 }
 
+
+function epochConversion(timeZone, EpochTime){
+
+    let TimeObj = {}
+
+    const epochTime = new Date(EpochTime * 1000)
+
+    const dateHour = epochTime.toLocaleString('en-US', {
+    
+        timeZone: `${timeZone}`,
+        month: "short",
+        day: "numeric",
+        hour: "numeric"
+    })
+
+    TimeObj.monthDay = dateHour.split(', ')[0]
+    TimeObj.hour = dateHour.split(', ') [1]
+
+    return TimeObj
+}
 
 function futureDatTime(timeZone){
 
@@ -185,7 +231,7 @@ function futureDatTime(timeZone){
 }
 
 
-function DOMExcludeTemp(cityAndCountry, forecast){
+function DOM_Main(cityAndCountry, forecast){
 
     const title = document.querySelector('.title')
     const date = document.querySelector('.date')
@@ -233,7 +279,11 @@ function DOMExcludeTemp(cityAndCountry, forecast){
         searchBar.insertAdjacentElement('afterend', alertDiv)
     }
 
-    // forecast elements:
+    
+    DOM_Temperature()
+}
+
+function DOM_forecastDaily(forecast){
 
     const futureDate = futureDatTime(forecast.timeZone)
 
@@ -257,8 +307,147 @@ function DOMExcludeTemp(cityAndCountry, forecast){
         condition.textContent = capitalize(forecast.futureDaysDescription[idx])
     })
 
-    DOM_Temperature()
 }
+
+{/* <div class="hourly_container">
+<div class="hourly_cell today">
+    <p class="hourly_hours">1 PM</p>
+    <img src="" alt="" class="hourly_icon">
+    <p class="hourlyTemp">21 C</p>
+    <p class="hourly_condition">Cloudy</p>
+</div> */}
+
+// forecast.hours = epochTime.map((EpochTime) => epochConversion(timeZone, EpochTime).hour)
+// forecast.hourlyDate = epochTime.map((EpochTime) => epochConversion(timeZone, EpochTime).monthDay)
+// forecast.hourlyIcon = hourlyIcon
+// forecast.hourlyTemp = hourlyTemp
+// forecast.hourlyDescription = hourlyDescription
+
+function DOM_sliderControl(){
+
+    const arrLength = dataStore.accessForecast().hours.length
+    const pageNum = Math.ceil(arrLength / 7) 
+
+    const backwardBtn = document.createElement('button')
+    backwardBtn.classList.add('backward')
+    backwardBtn.textContent = '\u276E'
+    backwardBtn.onclick = () => slider.backward()
+
+    const forwardBtn = document.createElement('button')
+    forwardBtn.classList.add('forward')
+    forwardBtn.textContent = '\u276F'
+    forwardBtn.onclick = () => slider.forward()
+
+    const container = document.querySelector('.slider_main')
+    container.append(backwardBtn)
+
+    for(let i = 0; i < pageNum; i += 1){
+
+        const pageIndicator = document.createElement('button')
+        pageIndicator.dataset.key = i
+        pageIndicator.textContent = '\u2218'
+
+        container.append(pageIndicator)
+
+        if (i == 0){
+            pageIndicator.textContent = '\u25CF'
+            pageIndicator.classList.add('solidDot')
+            pageIndicator.onclick = () => slider.displayDefault()
+            container.append(forwardBtn)
+            continue
+        }
+        else if (i == pageNum - 1){
+            pageIndicator.classList.add('hollowDot')
+            pageIndicator.onclick = () => DOM_forecastHourly(i * 7, arrLength)
+            container.append(forwardBtn)
+            continue
+        }
+        
+        pageIndicator.classList.add('hollowDot')
+        pageIndicator.onclick = () => DOM_forecastHourly(i * 7, i * 7 + 7)
+        container.append(forwardBtn)
+        
+    }
+
+    container.append(forwardBtn)
+
+}
+
+function DOM_forecastHourly(left = 0, right = 7){
+
+    const forecast = dataStore.accessForecast()
+    
+    const hours = forecast.hours.slice(left, right)
+    const hourlyDate = forecast.hourlyDate.slice(left, right)
+    const hourlyIcon = forecast.hourlyIcon.slice(left, right)
+    const hourlyTemp = forecast.hourlyTemp.slice(left, right)
+    const hourlyDescription = forecast.hourlyDescription.slice(left, right)
+
+    const hoursDOM = document.querySelectorAll('.hourly_hours')
+    hoursDOM.forEach((item, idx) => {
+        item.textContent = hours[idx]
+    })
+
+    const iconDOM = document.querySelectorAll('.hourly_icon')
+    iconDOM.forEach((icon, idx) => {
+        icon.src = `./icons/${hourlyIcon[idx]}.svg`
+    })
+
+    const tempDOM = document.querySelectorAll('.hourlyTemp')
+    tempDOM.forEach((item, idx) => {
+        item.textContent = hourlyTemp[idx]
+    })
+
+    const conditionDOM = document.querySelectorAll('.hourly_condition')
+    conditionDOM.forEach((item, idx) => {
+        item.textContent = hourlyDescription[idx]
+    })
+
+
+}
+
+// let a = [1,2,3,4,5,6,7,8,9,10]
+
+const slider = (function (){
+
+    let index = 0
+    
+    return {
+
+        displayDefault: function(){
+            DOM_forecastHourly(0, 7)
+        },
+
+        forward: function(){
+            
+            let arr = dataStore.accessForecast().hours
+
+            if(index + 7 > arr.length -1){
+                DOM_forecastHourly(index, arr.length)
+
+            }
+            else{
+                index += 7
+                DOM_forecastHourly(index, index + 7)
+            }
+
+        },
+
+        backward: function(){
+
+
+            if(index - 7 < 0){
+                DOM_forecastHourly(0, 7)
+            }
+            else{
+                index -= 7
+                DOM_forecastHourly(index, index + 7)
+            }
+        },
+
+        resetIndex: () => index = 0
+    }
+})()
 
 function DOM_Temperature(){
     
@@ -328,11 +517,13 @@ function save_localStorage(obj){
 
 const dataStore = (function (){
 
+    let forecastCopy = {}
     let temperatures = {unit:'c'}
     let lastSearched = {}
 
     console.log('datastore start')
     return{
+        accessForecast: () => {return forecastCopy},
         accessTemp: () => {return temperatures},
         accessRecords: () => {return records},
         accessLastSearched: () => {return lastSearched},
@@ -364,7 +555,11 @@ const Load_LocalStorage = (async function (){
     else{
         const coordinate = JSON.parse(localStorage.getItem('lastSearched'))
         forecast = await getWeather(coordinate.lat, coordinate.lon) 
-        DOMExcludeTemp(coordinate.cityAndCountry, forecast)
+        Object.assign(dataStore.accessForecast(), forecast)
+
+        DOM_Main(coordinate.cityAndCountry, forecast)
+        DOM_forecastDaily(forecast)
+        DOM_forecastHourly()
     }
 
 })()
@@ -422,7 +617,8 @@ function displayHistory(){
             cityObj = JSON.parse(localStorage.getItem(cityName))
 
             forecast = await getWeather(cityObj.lat, cityObj.lon) 
-            DOMExcludeTemp(cityObj.cityAndCountry, forecast)
+            DOM_Main(cityObj.cityAndCountry, forecast)
+            DOM_forecastDaily(forecast)
 
             history.style.display = 'none'
         }

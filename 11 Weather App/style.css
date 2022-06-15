@@ -171,7 +171,27 @@ p {
     font-size: 1.3rem;
 }
 
-div.forecast_container {
+.slider_main{
+    display: flex;
+    align-items: center;
+}
+
+button.backward, button.forward, button.solidDot, button.hollowDot {
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-size: 3rem;
+}
+
+button.solidDot {
+    font-size: 1.5rem;
+}
+
+button.backward, button.forward {
+    font-size: 2.5rem;
+}
+
+div.forecast_container, div.hourly_container {
     width: 60vw;
     height: 270px;
     display: grid;
@@ -179,7 +199,7 @@ div.forecast_container {
     margin: auto;
 }
 
-div.forecast_cell {
+div.forecast_cell, div.hourly_cell {
     border: lightseagreen 2px dotted;
     border-left: none;
     display: flex;
