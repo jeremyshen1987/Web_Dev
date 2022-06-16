@@ -113,7 +113,7 @@ async function getWeather(cityLatitude, cityLongitude){
     const hourlyTemp = response_json.hourly.map((el) => Math.round(el.temp))
     const hourlyHumidity = response_json.hourly.map((el) => Math.round(el.humidity))
     const hourlyUV = response_json.hourly.map((el) => Math.round(el.uvi))
-    const hourlyPrecipitation = response_json.hourly.map((el) => el.pop)
+    const hourlyPrecipitation = response_json.hourly.map((el) => parseInt(el.pop * 100))
     const hourlyDescription = response_json.hourly.map((el) => el.weather[0].description)
     const hourlyIcon = response_json.hourly.map((el) => el.weather[0].icon)
 
@@ -153,11 +153,12 @@ async function getWeather(cityLatitude, cityLongitude){
 
     //hourly 
     forecast.hours = epochTime.map((EpochTime) => epochConversion(timeZone, EpochTime).hour)
-    forecast.hourlyDate = epochTime.map((EpochTime) => epochConversion(timeZone, EpochTime).monthDay)
+    forecast.hourlyWeekday = epochTime.map((EpochTime) => epochConversion(timeZone, EpochTime).weekday)
     forecast.hourlyIcon = hourlyIcon
     forecast.hourlyTemp = hourlyTemp.map((temp) => `${temp} \u2103`)
     forecast.hourlyTempFahrenheit = hourlyTemp.map((temp) => `${toFahrenheit(temp)} \u2109`)
     forecast.hourlyDescription = hourlyDescription
+    forecast.hourlyPrecipitation = hourlyPrecipitation
 
     ///////
     forecast.date = `${weekday}, ${localDate}`
@@ -177,12 +178,11 @@ function epochConversion(timeZone, EpochTime){
     const dateHour = epochTime.toLocaleString('en-US', {
     
         timeZone: `${timeZone}`,
-        month: "short",
-        day: "numeric",
+        weekday: 'short',
         hour: "numeric"
     })
 
-    TimeObj.monthDay = dateHour.split(', ')[0]
+    TimeObj.weekday = dateHour.split(', ')[0]
     TimeObj.hour = dateHour.split(', ') [1]
 
     return TimeObj
@@ -324,27 +324,26 @@ function DOM_sliderControl(){
 
         const pageIndicator = document.createElement('button')
         pageIndicator.dataset.key = i
+        pageIndicator.classList.add('sliderDot')
         pageIndicator.textContent = '\u2218'
 
         container.append(pageIndicator)
+        
+        pageIndicator.onclick = (e) => {
 
-        if (i == 0){
-            pageIndicator.textContent = '\u25CF'
-            pageIndicator.classList.add('solidDot')
-            pageIndicator.onclick = () => slider.displayDefault()
-            container.append(forwardBtn)
-            continue
-        }
-        else if (i == pageNum - 1){
-            pageIndicator.classList.add('hollowDot')
-            pageIndicator.onclick = () => DOM_forecastHourly(i * 7, arrLength)
-            container.append(forwardBtn)
-            continue
+            const Buttons = document.querySelectorAll('.sliderDot')
+            Buttons.forEach((btn) => {
+                btn.textContent = '\u2218'
+            })
+            
+            e.target.textContent = '\u25CF'
+            slider.setIndex(i * 7)
+            DOM_forecastHourly(i * 7, i * 7 + 7)
         }
         
-        pageIndicator.classList.add('hollowDot')
-        pageIndicator.onclick = () => DOM_forecastHourly(i * 7, i * 7 + 7)
-        container.append(forwardBtn)
+        if (i == 0){
+            pageIndicator.textContent = '\u25CF'
+        }
         
     }
 
@@ -354,34 +353,63 @@ function DOM_sliderControl(){
 
 function DOM_forecastHourly(left = 0, right = 7){
 
-    const forecast = dataStore.accessForecast()
-    
-    const hours = forecast.hours.slice(left, right)
-    const hourlyDate = forecast.hourlyDate.slice(left, right)
-    const hourlyIcon = forecast.hourlyIcon.slice(left, right)
-    const hourlyTemp = (forecast.unit == 'c') ? forecast.hourlyTemp.slice(left, right) : forecast.hourlyTempFahrenheit.slice(left, right)
-    const hourlyDescription = forecast.hourlyDescription.slice(left, right)
+    try {
+        const forecast = dataStore.accessForecast()
+        
+        const hours = forecast.hours.slice(left, right)
+        const hourlyWeekday = forecast.hourlyWeekday.slice(left, right)
+        const hourlyIcon = forecast.hourlyIcon.slice(left, right)
+        const hourlyTemp = (forecast.unit == 'c') ? forecast.hourlyTemp.slice(left, right) : forecast.hourlyTempFahrenheit.slice(left, right)
+        const hourlyPrecipitation = forecast.hourlyPrecipitation.slice(left, right)
+        const hourlyDescription = forecast.hourlyDescription.slice(left, right)
 
-    const hoursDOM = document.querySelectorAll('.hourly_hours')
-    hoursDOM.forEach((item, idx) => {
-        item.textContent = hours[idx]
-    })
+        console.log(hourlyDescription)
 
-    const iconDOM = document.querySelectorAll('.hourly_icon')
-    iconDOM.forEach((icon, idx) => {
-        icon.src = `./icons/${hourlyIcon[idx]}.svg`
-    })
+        const weekdayDOM = document.querySelectorAll('.hourly_weekday')
+        weekdayDOM.forEach((item, idx) => {
+            item.textContent = hourlyWeekday[idx]
+        })
 
-    const tempDOM = document.querySelectorAll('.hourlyTemp')
-    tempDOM.forEach((item, idx) => {
-        item.textContent = hourlyTemp[idx]
-    })
+        const hoursDOM = document.querySelectorAll('.hourly_hours')
+        hoursDOM.forEach((item, idx) => {
+            item.textContent = hours[idx]
+        })
 
-    const conditionDOM = document.querySelectorAll('.hourly_condition')
-    conditionDOM.forEach((item, idx) => {
-        item.textContent = hourlyDescription[idx]
-    })
+        const iconDOM = document.querySelectorAll('.hourly_icon')
+        iconDOM.forEach((icon, idx) => {
+            icon.src = `./icons/${hourlyIcon[idx]}.svg`
+        })
 
+        const tempDOM = document.querySelectorAll('.hourlyTemp')
+        tempDOM.forEach((item, idx) => {
+            item.textContent = hourlyTemp[idx]
+        })
+
+        const rainDOM = document.querySelectorAll('.rainProb')
+        rainDOM.forEach((item, idx) => {
+            /// reset textContent so the empty box(s) in last page won't carry over text from previous page
+            item.textContent = ''
+            item.classList.remove('rainProb_mod')
+            item.textContent = (hourlyPrecipitation[idx] >= 30) ? `${hourlyPrecipitation[idx]}%` : ''
+            if(hourlyPrecipitation[idx] >= 30){
+                item.classList.add('rainProb_mod')
+            }
+        })
+
+        const conditionDOM = document.querySelectorAll('.hourly_condition')
+        conditionDOM.forEach((item, idx) => {
+            /// reset textContent so the empty box(s) in last page won't carry over text from previous page
+            item.textContent = ''
+            item.classList.remove('hourly_condition_mod')
+            item.textContent = (hourlyPrecipitation[idx] >= 30) ? 'Chance of rain' : capitalize(hourlyDescription[idx])
+            if(hourlyPrecipitation[idx] >= 30){
+                item.classList.add('hourly_condition_mod')
+            }
+        })
+    }
+    catch (e){
+        console.log(e)
+    }
 
 }
 
@@ -389,10 +417,12 @@ function DOM_forecastHourly(left = 0, right = 7){
 const slider = (function (){
 
     let index = 0
-    
+
     return {
 
-        displayIndex: () => {return index},
+        setIndex: (x) => {index = x},
+
+        getIndex: () => {return index},
 
         displayDefault: function(){
             DOM_forecastHourly(0, 7)
@@ -400,21 +430,22 @@ const slider = (function (){
 
         forward: function(){
             
-            let arr = dataStore.accessForecast().hours
+            const arr = dataStore.accessForecast().hours
+            const pageNum = Math.ceil(arr.length / 7)
 
             if(index + 7 > arr.length -1){
                 DOM_forecastHourly(index, arr.length)
-
+                index = (pageNum - 1) * 7
             }
             else{
                 index += 7
                 DOM_forecastHourly(index, index + 7)
             }
-
+            
+            this.highlight()
         },
 
         backward: function(){
-
 
             if(index - 7 < 0){
                 DOM_forecastHourly(0, 7)
@@ -423,6 +454,17 @@ const slider = (function (){
                 index -= 7
                 DOM_forecastHourly(index, index + 7)
             }
+
+            this.highlight()
+        },
+
+        highlight: function(){
+            const Buttons = document.querySelectorAll('.sliderDot')
+            Buttons.forEach((btn) => {
+                btn.textContent = (btn.dataset.key == index / 7) ? '\u25CF' : '\u2218'
+            })
+
+
         },
 
         resetIndex: () => index = 0
@@ -441,7 +483,7 @@ function DOM_Temperature(){
 
     //hourly
     const hourlyTemp = document.querySelectorAll('.hourlyTemp')
-    const index = slider.displayIndex()
+    const index = slider.getIndex()
     const arrLength = forecast.hourlyTemp.length
 
 

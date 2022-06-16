@@ -113,7 +113,7 @@ div.container {
 
     width: 60vw;
     height: 360px;
-    margin: 30px auto 50px;
+    margin: 30px auto 30px;
 
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -175,27 +175,35 @@ p {
     width: 60vw;
     height: 40px;
     display: flex;
-    margin: auto;
+    margin: 30px auto 20px;
+}
+
+button.dailyHourlyBtn {
+    cursor: pointer;
+    border-radius: 5px;
+    background: none;
+    width: 65px;
+    font-size: 1rem;
+    border: lightseagreen 2px solid;
+    color: lightseagreen;
+
 }
 
 .slider_main{
     display: none;
     align-items: center;
+    margin-left: 400px;
 }
 
-button.backward, button.forward, button.solidDot, button.hollowDot {
+button.backward, button.forward, button.sliderDot {
     cursor: pointer;
     background: none;
     border: none;
-    font-size: 3rem;
-}
-
-button.solidDot {
     font-size: 1.5rem;
 }
 
 button.backward, button.forward {
-    font-size: 2.5rem;
+    font-size: 1.5rem;
 }
 
 div.forecast_container, div.hourly_container {
@@ -220,9 +228,22 @@ div.forecast_cell, div.hourly_cell {
     flex-direction: column;
     align-items: center;
 }
+div.hourly_now {
+    border-left: lightseagreen 2px dotted;
+}
 
-p.forecast_date, p.tempMax, p.tempMin, p.forecast_condition {
+p.rainProb {
+    margin-bottom: 0;
+    font-size: 1rem;
+}
+
+p.forecast_date, p.tempMax, p.tempMin, p.forecast_condition, p.hourly_weekday, p.hourly_hours, p.hourlyTemp{
     margin: 5px auto;
+}
+
+p.hourly_condition {
+    font-size: 1.4rem;
+    margin: 25px auto;
 }
 
 p.forecast_weekday {
@@ -241,12 +262,19 @@ div.today {
     border: lightseagreen 2px solid;;
 }
 
-
-
 div.container, div.forecast_container {
     min-width: 600px
 }
 
 div.container, div.tempBox, div.currentCondition, div.weatherDetailLeft,div.weatherDetailRight {
     border: var(--light-brown) 1px solid;
+}
+
+p.rainProb_mod {
+    margin-top: 30px;
+}
+
+p.hourly_condition_mod {
+    margin-top: 5px;
+    font-size: 1.1rem;
 }
