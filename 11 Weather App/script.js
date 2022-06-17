@@ -43,11 +43,7 @@ async function getCoordinate(userInput){
     const cityLatitude = response_json[cityIndex].lat
     const cityLongitude = response_json[cityIndex].lon
 
-    console.log(cityLatitude, cityLongitude)
-
     const forecast = await getWeather(cityLatitude, cityLongitude) 
-    
-
     Object.assign(dataStore.accessForecast(), forecast)
 
     DOM_Main(cityAndCountry, forecast)
@@ -66,7 +62,7 @@ function saveSearchResult(cityLatitude, cityLongitude, cityAndCountry){
     lastSearched.lon = cityLongitude
     lastSearched.cityAndCountry = cityAndCountry
 
-    dataStore.persist_lastSearch()
+    dataStore.saveCoordinate()
     dataStore.appendLocalStorage(cityAndCountry)
     
 }
@@ -302,9 +298,9 @@ function DOM_forecastDaily(forecast){
 }
 
 
-function DOM_sliderControl(){
+function DOM_slider(){
 
-    const arrLength = dataStore.accessForecast().hours.length
+    const arrLength = 48
     const pageNum = Math.ceil(arrLength / 7) 
 
     const backwardBtn = document.createElement('button')
@@ -363,8 +359,6 @@ function DOM_forecastHourly(left = 0, right = 7){
         const hourlyPrecipitation = forecast.hourlyPrecipitation.slice(left, right)
         const hourlyDescription = forecast.hourlyDescription.slice(left, right)
 
-        console.log(hourlyDescription)
-
         const weekdayDOM = document.querySelectorAll('.hourly_weekday')
         weekdayDOM.forEach((item, idx) => {
             item.textContent = hourlyWeekday[idx]
@@ -387,18 +381,20 @@ function DOM_forecastHourly(left = 0, right = 7){
 
         const rainDOM = document.querySelectorAll('.rainProb')
         rainDOM.forEach((item, idx) => {
-            /// reset textContent so the empty box(s) in last page won't carry over text from previous page
+            /// reset textContent to prevent text carryover.
             item.textContent = ''
             item.classList.remove('rainProb_mod')
+            item.parentElement.classList.remove('hourly_cell_mod')
             item.textContent = (hourlyPrecipitation[idx] >= 30) ? `${hourlyPrecipitation[idx]}%` : ''
             if(hourlyPrecipitation[idx] >= 30){
                 item.classList.add('rainProb_mod')
+                item.parentElement.classList.add('hourly_cell_mod')
             }
         })
 
         const conditionDOM = document.querySelectorAll('.hourly_condition')
         conditionDOM.forEach((item, idx) => {
-            /// reset textContent so the empty box(s) in last page won't carry over text from previous page
+            /// reset textContent to prevent text carryover.
             item.textContent = ''
             item.classList.remove('hourly_condition_mod')
             item.textContent = (hourlyPrecipitation[idx] >= 30) ? 'Chance of rain' : capitalize(hourlyDescription[idx])
@@ -406,6 +402,18 @@ function DOM_forecastHourly(left = 0, right = 7){
                 item.classList.add('hourly_condition_mod')
             }
         })
+
+        if(left == 0){
+
+            slider.resetIndex()
+
+            const Buttons = [...document.querySelectorAll('.sliderDot')]
+            Buttons.forEach((btn) => {
+                btn.textContent = '\u2218'
+            })
+            Buttons[0].textContent = '\u25CF'
+        }
+
     }
     catch (e){
         console.log(e)
@@ -421,10 +429,11 @@ const slider = (function (){
     return {
 
         setIndex: (x) => {index = x},
-
         getIndex: () => {return index},
+        resetIndex: () => {index = 0},
 
         displayDefault: function(){
+
             DOM_forecastHourly(0, 7)
         },
 
@@ -454,7 +463,6 @@ const slider = (function (){
                 index -= 7
                 DOM_forecastHourly(index, index + 7)
             }
-
             this.highlight()
         },
 
@@ -464,10 +472,7 @@ const slider = (function (){
                 btn.textContent = (btn.dataset.key == index / 7) ? '\u25CF' : '\u2218'
             })
 
-
-        },
-
-        resetIndex: () => index = 0
+        }
     }
 })()
 
@@ -566,6 +571,10 @@ const dataStore = (function (){
 
             LS_Cities = JSON.parse(localStorage.getItem('LS_cityNames'))
 
+            if(LS_Cities == null){
+                LS_Cities = []
+            }
+
             if(LS_Cities.includes(cityName)){
                 return
             }
@@ -574,8 +583,9 @@ const dataStore = (function (){
             localStorage.setItem('LS_cityNames', JSON.stringify(LS_Cities))
         },
 
-        persist_lastSearch: () => {
+        saveCoordinate: () => {
             const coordinate = JSON.stringify(lastSearched)
+            localStorage.setItem(lastSearched.cityAndCountry, coordinate)
             localStorage.setItem('lastSearched', coordinate)
         }
     }
@@ -585,7 +595,7 @@ const Load_LocalStorage = (async function (){
 
     if(localStorage.getItem('lastSearched') == null){
         getCoordinate('hefei')
-        DOM_sliderControl()
+        DOM_slider()
     }
     else{
         const coordinate = JSON.parse(localStorage.getItem('lastSearched'))
@@ -595,7 +605,7 @@ const Load_LocalStorage = (async function (){
         DOM_Main(coordinate.cityAndCountry, forecast)
         DOM_forecastDaily(forecast)
         DOM_forecastHourly()
-        DOM_sliderControl()
+        DOM_slider()
     }
 
 })()
@@ -612,7 +622,7 @@ function toggleDailyHourly(){
     sliderContainer.style.display = (window.getComputedStyle(sliderContainer).display == 'none') ? 'flex' : 'none'
 
     const dailyHourlyBtn = document.querySelector('.dailyHourlyBtn')
-    dailyHourlyBtn.textContent = (dailyHourlyBtn.textContent == 'Daily') ? 'Hourly' : 'Daily'
+    dailyHourlyBtn.textContent = (dailyHourlyBtn.textContent == '7 Day') ? '48 Hr' : '7 Day'
 }
 
 function toggleCF(){
@@ -625,7 +635,6 @@ function toggleCF(){
     unitBtn.textContent = (forecase.unit == 'c') ? '\u2109' : '\u2103'
 
 }
-
 
 function toFahrenheit(c){
     return Math.round((c * 9 / 5) + 32)
@@ -662,7 +671,7 @@ function displayHistory(){
         li.classList.add('list')
         li.textContent = item
         li.onclick = async function loadHistory(){
-            
+
             cityName = this.textContent
             cityObj = JSON.parse(localStorage.getItem(cityName))
 
@@ -702,8 +711,6 @@ function displayHistory(){
     container.append(history)
 
 }
-
-
 
 (function listener(){
 
