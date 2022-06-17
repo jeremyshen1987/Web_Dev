@@ -3,7 +3,7 @@ async function getCoordinate(userInput){
     userInput ||= document.querySelector('input#cityName').value
     
 
-    const response = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${userInput}&limit=5&appid=af974fea2bef8843a98dfed25ae51ac3`)
+    const response = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${userInput}&limit=5&appid=af974fea2bef8843a98dfed25ae51ac3`)
     const response_json = await response.json()
 
     let cityIndex = undefined
