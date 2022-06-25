@@ -1,0 +1,2 @@
+h1{text-align:center}div.images{border:15px;display:flex;flex-wrap:wrap;gap:10px;margin:30px auto}div.imgWrapper{aspect-ratio:1;width:240px}img{aspect-ratio:1;cursor:pointer;width:200px}img:hover{-webkit-transform:scale(1.15);transform:scale(1.15)}div.overview{margin-top:100px}span{font-size:1.5rem}span.best_score{margin-left:20px}div.game_over{font-size:3rem;text-align:center}body{box-sizing:border-box;margin:auto;width:80vw}
+/*# sourceMappingURL=main.c75284b8.css.map*/
