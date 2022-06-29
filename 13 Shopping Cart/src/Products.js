@@ -30,11 +30,22 @@ const Products = (props) => {
 
   }
 
-  function addItemToCart(id){
-    console.log(id)
+  function addItemToCart(item){
+    console.log(item)
     // console.log(props.setCart)
-    props.setCart([...props.cart, id])
-    console.log(props.cart)
+    const itemInCart = props.cart.filter(el => el.id === item.id)
+
+    if(itemInCart.length === 0){
+      item.qty = 1
+      props.setCart([...props.cart, item])
+      console.log(props.cart)
+    }
+    else{
+      return
+    }
+
+    
+
   }
 
   function capitalize(word){
@@ -61,7 +72,7 @@ const Products = (props) => {
                 <div>Type: {capitalize(item.type.value)}</div>
                 <div>Rarity: {capitalize(item.rarity.value)}</div>
                 <img src={item.images.icon} alt={item.name}></img>
-                <button className="btn_addItem" onClick={() => addItemToCart(item.id)}>Add to Cart</button>
+                <button className="btn_addItem" onClick={() => addItemToCart(item)}>Add to Cart</button>
                </div>
       })}
       </div>

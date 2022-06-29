@@ -6,7 +6,7 @@ import { useState } from "react";
 
 const RouteSwitch = () => {
 
-  const [cart, setCart] = useState(['first item'])
+  const [cart, setCart] = useState([])
 
 
   return (
@@ -14,7 +14,7 @@ const RouteSwitch = () => {
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/products" element={<Products cart={cart} setCart={setCart} />} />
-        <Route path="/cart" element={<Cart item = {cart}/>} />
+        <Route path="/cart" element={<Cart cart={cart} setCart={setCart}/>} />
       </Routes>
     </BrowserRouter>
   );
