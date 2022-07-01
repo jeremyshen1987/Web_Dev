@@ -1,0 +1,41 @@
+.cart_title {
+    font-size: 2rem;
+    text-align: center;
+    border-bottom: #ddd9d7 2px solid;
+    margin: 20px 0;
+}
+
+.single_item_container {
+    display: flex;
+    border-bottom: #ddd9d7 2px solid;
+}
+
+.cart_item_details{
+    font-size: 1.2rem;
+}
+
+img.item {
+    width: 150px;
+    aspect-ratio: 1;
+}
+
+.Epic {
+    background-color: gold;
+}
+.Rare {
+    background-color: purple;
+}
+
+.Epic, .Rare {
+    color: white;
+}
+
+.qty_container{
+    font-size: 1.5rem;
+} 
+
+button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+}

@@ -37,6 +37,7 @@ const Products = (props) => {
 
     if(itemInCart.length === 0){
       item.qty = 1
+      item.rarity.value = capitalize(item.rarity.value)
       props.setCart([...props.cart, item])
       console.log(props.cart)
     }
@@ -53,11 +54,10 @@ const Products = (props) => {
   }
 
   return (
-    <div className="container">
+    <div className="products_container">
 
 
-      <h1>Hello from Products</h1>
-      <Link to='/cart'>Cart</Link>
+      <h1>All Products</h1>
 
 
       <div className="items_container">

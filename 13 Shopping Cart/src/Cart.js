@@ -1,4 +1,5 @@
 import React from "react";
+import './Cart.css'
 
 const Cart = (props) => {
 
@@ -47,34 +48,39 @@ const Cart = (props) => {
 
 
     return(
+
         <div>
             
-            <h1 className="cart_title">Shopping Cart</h1>
+            <div className="cart_title">Shopping Cart</div>
 
             <div>{cartQty === 0 ? 'No item in cart' : ''}</div>
 
-            <h3>{props.cart.length}</h3>
 
             {props.cart.map(item => {
                 return(
-                <div key={item.id}>
+                <div className="single_item_container" key={item.id}>
 
                     <div>
-                    <img src={item.images.smallIcon} alt={item.id}></img>
+                    <img className="item" src={item.images.smallIcon} alt={item.id}></img>
                     </div>
 
-                    <div>
+                    <div className="cart_item_details">
                         <h3>{item.name}</h3>
-                        <p>{item.rarity.value}</p>
-                        <div>
+                        <div className={item.rarity.value}>{item.rarity.value}</div>
+                        <div>{item.type.value}</div>
+                        <div className="qty_container">Qty: &nbsp;
                             <button onClick={() => subQty(item)}>-</button>
-                            <span>{item.qty}</span>
+                            <span>  {item.qty}  </span>
                             <button onClick={() => addQty(item)}>+</button>
                         </div>
                     </div>
                 </div>
                 )
             })}
+
+            <div>
+                {cartQty === 0 ? '' : `Number of Items: ${cartQty}`}
+            </div>
 
         </div>
     )

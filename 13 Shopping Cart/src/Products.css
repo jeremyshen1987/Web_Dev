@@ -1,7 +1,7 @@
 * {
     box-sizing: border-box;
 }
-.container {
+.products_container {
     width: 80vw;
     margin: auto;
 }
@@ -38,6 +38,7 @@ img {
 }
 
 .btn_addItem {
+    cursor: pointer;
     margin-top: auto;
     width: 250px;
     border: lightblue 2px solid;
