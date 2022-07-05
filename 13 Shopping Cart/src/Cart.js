@@ -1,9 +1,28 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import './Cart.css'
 
 const Cart = (props) => {
 
     const cartQty = props.cart.length
+
+    const [priceTotal, setPriceTotal] = useState(0)
+
+    useEffect(() => {
+    
+        if(cartQty === 0){
+            setPriceTotal(preVal => preVal = 0)
+            return
+        }
+
+        const total = props.cart.reduce((total, nextVal) => {
+
+            return total + nextVal.price * nextVal.qty
+        }, 0)
+
+        setPriceTotal(total)
+  
+    }, [props.cart])
+
 
     function addQty(item){
 
@@ -46,14 +65,18 @@ const Cart = (props) => {
         })
     }
 
-
     return(
 
         <div>
             
             <div className="cart_title">Shopping Cart</div>
 
-            <div>{cartQty === 0 ? 'No item in cart' : ''}</div>
+            <div className="cart_header">
+                <div></div>
+                <div>Item details</div>
+                <div>Unit Price</div>
+                <div>&nbsp; &nbsp; &nbsp;Qty</div>
+            </div>
 
 
             {props.cart.map(item => {
@@ -66,20 +89,33 @@ const Cart = (props) => {
 
                     <div className="cart_item_details">
                         <h3>{item.name}</h3>
-                        <div className={item.rarity.value}>{item.rarity.value}</div>
+                        <div><span className={item.rarity.displayValue}>{item.rarity.displayValue}</span></div>
                         <div>{item.type.value}</div>
-                        <div className="qty_container">Qty: &nbsp;
-                            <button onClick={() => subQty(item)}>-</button>
+                    </div>
+
+                    <div>
+                        <div className="price">${item.price}</div>
+                    </div>
+
+                    <div>
+                        <div className="qty_container">
+                            <button onClick={() => subQty(item)}><img className="change_qty" src="./svg/minus.svg" alt="cart"></img></button>
                             <span>  {item.qty}  </span>
-                            <button onClick={() => addQty(item)}>+</button>
+                            <button onClick={() => addQty(item)}><img className="change_qty" src="./svg/plus.svg" alt="cart"></img></button>
                         </div>
                     </div>
                 </div>
                 )
             })}
 
-            <div>
-                {cartQty === 0 ? '' : `Number of Items: ${cartQty}`}
+            <div className="empty_cart">{cartQty === 0 ? 'No item in cart' : ''}</div>
+
+            <div className="checkout_total">
+                {cartQty === 0 ? '' : `Total Price: ${priceTotal}`}
+            </div>
+
+            <div className="checkout">
+                {cartQty === 0 ? '' : <button className="checkout_btn">PAY</button>} 
             </div>
 
         </div>
