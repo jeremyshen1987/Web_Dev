@@ -1,48 +1,70 @@
 const http = require('http')
 const port = 3000
-const url = require('url')
 
-const fs = require('fs')
+const express = require('express')
+const app = express()
+const path = require('path')
 
 
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, './public', './index.html'))
+})
 
-function fsWebpage(reqUrl, res){
+app.get('/about', (req, res) => {
+    res.sendFile(path.join(__dirname, './public', './about.html'))
+})
 
-    if(reqUrl === '/'){
-        reqUrl = '/index'
-    }
+app.get('/contact', (req, res) => {
+    res.sendFile(path.join(__dirname, './public', './contact.html'))
+})
 
-    fs.readFile(`.${reqUrl}.html`, 'utf-8', (err, data) => {
-        if(err){
-            console.log(err)
-            return
-        }
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, './public', './404.html'))
+})
+
+
+app.listen(port, () => {
+    console.log('listening on port:', port)
+})
+
+
+// function fsWebpage(reqUrl, res){
+
+//     if(reqUrl === '/'){
+//         reqUrl = '/index'
+//     }
+
+//     fs.readFile(`.${reqUrl}.html`, 'utf-8', (err, data) => {
+//         if(err){
+//             console.log(err)
+//             return
+//         }
         
-        res.end(data) 
-    })
+//         res.end(data) 
+//     })
 
-}
+// }
 
-const server = http.createServer((req, res) => {
+// const server = http.createServer((req, res) => {
 
-    const reqUrl = url.parse(req.url).pathname
+//     const reqUrl = url.parse(req.url).pathname
 
-    if(reqUrl === '/' || reqUrl === '/about' || reqUrl === '/contact'){
+//     if(reqUrl === '/' || reqUrl === '/about' || reqUrl === '/contact'){
 
-        res.statusCode = 200
-        res.setHeader('Content-type', 'text/html')
+//         res.statusCode = 200
+//         res.setHeader('Content-type', 'text/html')
 
-        fsWebpage(reqUrl, res)
-        return 
-    }
+//         fsWebpage(reqUrl, res)
+//         return 
+//     }
 
-    console.log('invalid path selected')
+//     console.log('invalid path selected')
 
-    res.statusCode = 404
-    res.setHeader('Content-type', 'text/html')
-    fsWebpage('/404', res)
-})
+//     res.statusCode = 404
+//     res.setHeader('Content-type', 'text/html')
+//     fsWebpage('/404', res)
+// })
 
-server.listen(port, () => {
-    console.log('server running on port ', port)
-})
+// server.listen(port, () => {
+//     console.log('server running on port ', port)
+// })
