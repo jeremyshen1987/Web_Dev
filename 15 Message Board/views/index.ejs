@@ -8,6 +8,22 @@
     <% if (user) {%>
       <h1>WELCOME BACK <%= user.username %></h1>
       <a href="/logout">LOG OUT</a>
+      <h3>Or</h3>
+      <a href="/new">Post a message!</a>
+
+      <% if(msg) {%>
+
+
+
+        <% msg.forEach(item => {%>
+          <h3><%= item.post_title %></h3>
+          <h4><%= item.post_body %></h4>
+          <h5><%= item.username %></h5>
+        <%})%>
+
+      <% } %>
+
+
     <% } else { %>
 
       <h1>Click here to Login</h1>

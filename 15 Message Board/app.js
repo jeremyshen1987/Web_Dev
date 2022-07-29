@@ -8,6 +8,8 @@ const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require('bcryptjs')
 
 const User = require('./model/user-model')
+const Message = require('./model/message-model')
+
 const Router = require('./route/route')
 
 
@@ -56,43 +58,54 @@ app.use(express.urlencoded({ extended: false }));
 app.use(Router)
 
 
-
 app.post("/signup", async (req, res, next) => {
-    const user = new User({
-      username: req.body.username,
-      password: req.body.password,
-      email: req.body.email,
-      firstname: req.body.firstname,
-      lastname: req.body.lastname
-    })
-    
-    user.password = await bcrypt.hash(req.body.password, 10)
-    
-    user.save(err => {
-      if (err) { 
-        return next(err);
-      }
-      res.redirect("/");
-    });
+
+  const user = new User({
+    username: req.body.username,
+    password: req.body.password,
+    email: req.body.email,
+    firstname: req.body.firstname,
+    lastname: req.body.lastname
+  })
+  
+  user.password = await bcrypt.hash(req.body.password, 10)
+  
+  user.save(err => {
+    if (err) { 
+      return next(err);
+    }
+    res.redirect("/");
+  });
 
 });
 
 
 app.post(
-    "/login",
-    passport.authenticate("local", {
-      successRedirect: "/success",
-      failureRedirect: "/"
-    })
+  "/login",
+  passport.authenticate("local", {
+    successRedirect: "/new",
+    failureRedirect: "/"
+  })
 );
 
-app.get("/logout", (req, res) => {
-  req.logout(function (err) {
-    if (err) {
-      return next(err);
+app.post("/new", (req, res, next) => {
+
+  const newMsg = new Message({
+
+    username: req.user.username,
+    post_title: req.body.title,
+    post_body: req.body.post_content,
+    date: (new Date).toLocaleDateString()
+  })
+
+  newMsg.save(err => {
+    if(err){
+      return next(err)
     }
-    res.redirect("/");
-  });
-});
+    res.redirect("/")
+  })
+
+})
+
 
 app.listen(3000, () => console.log("app listening on port 3000!"));
